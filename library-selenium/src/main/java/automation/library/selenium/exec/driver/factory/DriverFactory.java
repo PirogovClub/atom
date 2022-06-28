@@ -1,5 +1,6 @@
 package automation.library.selenium.exec.driver.factory;
 
+import automation.library.common.Property;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import automation.library.selenium.exec.driver.managers.*;
@@ -22,7 +23,7 @@ import automation.library.selenium.exec.driver.managers.*;
 public class DriverFactory {
 
     public enum ServerType {
-        local, grid, saucelabs, browserstack, appium;
+        local, grid, saucelabs, browserstack, appium, smartbear, bitbar;
     }
 
     public enum BrowserType {
@@ -49,10 +50,13 @@ public class DriverFactory {
     }
 
     public WebDriver getDriver() {
-        return driverManager.get().getDriver();
+        if(Property.getVariable("cukes.techstack") !=null){
+            return driverManager.get().getDriver();
+        }
+        return null;
     }
-	
-	public WebDriver returnDriver() {
+
+    public WebDriver returnDriver() {
         return driverManager.get().returnDriver();
     }
 
@@ -82,7 +86,14 @@ public class DriverFactory {
             case appium:
                 driverManager.set(new AppiumDriverManager());
                 break;
-            default:
+            case smartbear:
+                //TODO - for next release
+//                driverManager.set(new SmartBearDriverManager());
+                break;
+            case bitbar:
+                driverManager.set(new BitBarDriverManager());
+                break;
+                default:
                 switch (browserType) {
                     case "chrome":
                         driverManager.set(new ChromeDriverManager());

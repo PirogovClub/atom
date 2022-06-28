@@ -1,5 +1,6 @@
 package automation.library.dbUtils;
 
+import automation.library.common.Property;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -52,8 +53,8 @@ public class MongoDBUtilsHelper {
 	/**
 	 * To create the connection when uri and db name is passed as parameter
 	 *
-	 * @param uri
-	 * @param dbName
+	 * @param uri connection url
+	 * @param mongoDbName mongodb name
 	 */
 	public void createConn(String uri, String mongoDbName) {
 		if (mongoClient == null) {

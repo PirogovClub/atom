@@ -1,66 +1,34 @@
-apply plugin: 'java-library'
-apply plugin: 'maven'
-apply plugin: 'java'
 
-def nexusUser = System.getProperty("nexus.user")
-def nexusPassword = System.getProperty("nexus.password")
-def nexusUrl = System.getProperty("nexus.url")
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
 
 repositories {
     mavenLocal()
+
     mavenCentral()
-    jcenter()
-
-//	maven {
-//		credentials {
-//			username "$nexusUser"
-//			password "$nexusPassword"
-//		}
-//		url "$nexusURL"
-//	}
 }
 
+/*
 configurations.all {
-	// Check for snapshot updates every build
-	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    // Check for snapshot updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
+*/
 
 dependencies {
-	compile group: 'com.acn.ntc', name: 'library-common', version: '0.0.3', changing:true
-    compile group: 'io.cucumber', name: 'cucumber-testng', version: '4.7.2'
-    compile group: 'io.cucumber', name: 'cucumber-java8', version: '4.7.2'
-    compile group: 'io.cucumber', name: 'cucumber-picocontainer', version: '4.7.2'
-	compile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.3'
-	compile group: 'io.rest-assured', name: 'json-schema-validator', version: '3.0.3'
-	compile group: 'com.atlassian.oai', name: 'swagger-request-validator-restassured', version: '1.4.2'
-	compile group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
+    implementation 'com.accenture.atom:library-common:club.1.1.06-SNAPSHOT'
+    api 'com.google.code.gson:gson:2.8.2'
+
+    implementation group: 'io.cucumber', name: 'cucumber-testng', version: '4.7.2'
+    implementation group: 'io.cucumber', name: 'cucumber-java8', version: '4.7.2'
+    implementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '4.7.2'
+    api group: 'io.rest-assured', name: 'rest-assured', version: '3.0.3'
+    api group: 'io.rest-assured', name: 'json-schema-validator', version: '3.0.3'
+    implementation group: 'com.atlassian.oai', name: 'swagger-request-validator-restassured', version: '1.4.2'
+    implementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
+
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from tasks.javadoc.destinationDir
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-artifacts {
-    archives jar
-    archives javadocJar
-	archives sourcesJar
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "$nexusUrl") {
-                authentication(userName: "$nexusUser", password: "$nexusPassword")
-            }
-        }
-    }
-}
-
-group = 'com.acn.ntc'
-version = System.getProperty("jar.version")
+apply from: 'publish.gradle'

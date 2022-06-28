@@ -22,16 +22,16 @@ import java.util.Map;
  */
 public class DBUtilsHelper<T> {
 
-    static Connection conn = null;
-    static QueryRunner run = new QueryRunner();
-    static boolean keepConnection = false;
+    Connection conn = null;
+    QueryRunner run = new QueryRunner();
+    boolean keepConnection = false;
 
     /**
      * Create the db connection reading the config details from environment config file
      * /src/test/resources/config/environments/env.properties
      * read value from - DBurl, DBDriver, DBusr, DBpwd
      */
-    public static void createConn() throws SQLException, IOException {
+    public void createConn() throws SQLException, IOException {
 
         if (conn == null || conn.isClosed()) {
 
@@ -57,7 +57,7 @@ public class DBUtilsHelper<T> {
      * @throws SQLException
      * @throws IOException
      */
-    public static void createConn(String url, String driver, String usr, String pwd) throws SQLException, IOException {
+    public void createConn(String url, String driver, String usr, String pwd) throws SQLException, IOException {
 
         if (conn == null || conn.isClosed()) {
             DbUtils.loadDriver(driver);
@@ -75,7 +75,7 @@ public class DBUtilsHelper<T> {
      * @throws IOException
      */
 
-    public static void createDBConn(String dbPrefix) throws SQLException, IOException {
+    public void createDBConn(String dbPrefix) throws SQLException, IOException {
 
         if (conn == null || conn.isClosed()) {
             String propsPath = Constants.ENVIRONMENTPATH + Property.getVariable("cukes.env") + ".properties";
@@ -95,7 +95,7 @@ public class DBUtilsHelper<T> {
      * close the connection
      * @throws SQLException
      */
-    public static void closeConn() throws SQLException {
+    public void closeConn() throws SQLException {
         if (!keepConnection) {
             DbUtils.closeQuietly(conn);
         }
@@ -106,7 +106,7 @@ public class DBUtilsHelper<T> {
      * @param sql input sql string
      * @param params any additional parameters
      */
-    public static Object[] getDBArray(String sql, Object... params) throws SQLException, IOException {
+    public Object[] getDBArray(String sql, Object... params) throws SQLException, IOException {
 
         try {
             createConn();
@@ -130,7 +130,7 @@ public class DBUtilsHelper<T> {
      * @param sql input sql string
      * @param params any additional parameters
      */
-    public static List<Object[]> getDBArrayList(String sql, Object...params) throws SQLException, IOException{
+    public List<Object[]> getDBArrayList(String sql, Object...params) throws SQLException, IOException{
 
         try {
             createConn();
@@ -152,7 +152,7 @@ public class DBUtilsHelper<T> {
      * @param sql input sql string
      * @param params any additional parameters
      */
-    public static Map<String, Object> getDBMap(String sql, Object... params) throws SQLException, IOException {
+    public Map<String, Object> getDBMap(String sql, Object... params) throws SQLException, IOException {
 
         try {
             createConn();
@@ -174,7 +174,7 @@ public class DBUtilsHelper<T> {
      * @param sql input sql string
      * @param params any additional parameters
      */
-    public static List<Map<String, Object>> getDBMapList(String sql, Object... params) throws
+    public List<Map<String, Object>> getDBMapList(String sql, Object... params) throws
             SQLException, IOException {
 
         try {
@@ -198,7 +198,7 @@ public class DBUtilsHelper<T> {
      * @param sql - input sql string
      * @param clazz - class 
      */
-    public static <T> Object getDBBean(String sql, Class<T> clazz, Object... params) throws
+    public <T> Object getDBBean(String sql, Class<T> clazz, Object... params) throws
             SQLException, IOException {
         try {
             createConn();
@@ -220,7 +220,7 @@ public class DBUtilsHelper<T> {
      * @param sql - input sql string
      * @param clazz - class 
      */
-    public static <T> List<T> getDBBeanList(String sql, Class<T> clazz, Object... params) throws
+    public <T> List<T> getDBBeanList(String sql, Class<T> clazz, Object... params) throws
             SQLException, IOException {
         try {
             createConn();
@@ -243,7 +243,7 @@ public class DBUtilsHelper<T> {
      * @param sql input sql string
      * @param params
      */
-    public static int update(String sql, Object... params) throws SQLException, IOException {
+    public int update(String sql, Object... params) throws SQLException, IOException {
         int affectedRows = 0;
         try {
             createConn();
@@ -278,7 +278,7 @@ public class DBUtilsHelper<T> {
      * @throws SQLException
      * @throws IOException
      */
-    public static Map<String, Object> getDBMap2(String dbPrefix, String sql, Object... params) throws
+    public Map<String, Object> getDBMap2(String dbPrefix, String sql, Object... params) throws
             SQLException, IOException {
 
         try {
@@ -306,7 +306,7 @@ public class DBUtilsHelper<T> {
      * @throws SQLException
      * @throws IOException
      */
-    public static List<Map<String, Object>> getDBMapList2(String dbPrefix, String sql, Object... params) throws
+    public List<Map<String, Object>> getDBMapList2(String dbPrefix, String sql, Object... params) throws
             SQLException, IOException {
 
         try {
@@ -333,7 +333,7 @@ public class DBUtilsHelper<T> {
      * @throws SQLException
      * @throws IOException
      */
-    public static int update2(String dbPrefix, String sql, Object... params) throws SQLException, IOException {
+    public int update2(String dbPrefix, String sql, Object... params) throws SQLException, IOException {
         int affectedRows = 0;
         try {
             createDBConn(dbPrefix);
@@ -364,7 +364,7 @@ public class DBUtilsHelper<T> {
      * @param params - optional array[][] of substitution variables to be applied to the sql string to create batch of statements
      * @return int array with number of rows inserted, updated or deleted for each sql statement
      */
-    public static int[] bulkUpdate(String sql, Object[]... params) throws SQLException, IOException {
+    public int[] bulkUpdate(String sql, Object[]... params) throws SQLException, IOException {
         int[] affectedRows = null;
         try {
             createConn();
@@ -394,7 +394,7 @@ public class DBUtilsHelper<T> {
      * @param params - optional array[] of substitution variables to be applied to the set of sql statements
      * @return int number of rows inserted, updated or deleted
      */
-    public static int multiUpdate(String[] sqls, Object... params) throws SQLException, IOException {
+    public int multiUpdate(String[] sqls, Object... params) throws SQLException, IOException {
 
         int affectedRows = 0;
 

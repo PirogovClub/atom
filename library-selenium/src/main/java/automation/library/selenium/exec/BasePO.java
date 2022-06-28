@@ -6,16 +6,17 @@ import automation.library.selenium.core.Element;
 import automation.library.selenium.core.Locator;
 import automation.library.selenium.exec.driver.factory.DriverFactory;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.asserts.SoftAssert;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.*;
 
 import static automation.library.selenium.core.Locator.getLocator;
+import static automation.library.selenium.exec.Constants.TEST_DATA_ARG_NAME;
 
 public class BasePO extends automation.library.selenium.core.PageObject {
 
@@ -23,23 +24,23 @@ public class BasePO extends automation.library.selenium.core.PageObject {
         super(DriverFactory.getInstance().getDriver());
     }
 
+    protected Map<String, Object> getTestData() {
+        return (Map<String, Object>) TestContext.getInstance().testdata().get(TEST_DATA_ARG_NAME);
+    }
+
     public WebDriver getDriver() {
-        log.debug("obtaining the driver for current thread");
+        //log.debug("obtaining the driver for current thread");
         return DriverFactory.getInstance().getDriver();
     }
 
     public WebDriverWait getWait() {
-        log.debug("obtaining the wait for current thread");
+        //log.debug("obtaining the wait for current thread");
         return DriverFactory.getInstance().getWait();
     }
 
     public void quitDriver() {
         log.debug("quitting the driver and removing from current thread of driver factory");
         DriverFactory.getInstance().quit();
-    }
-
-    public SoftAssert sa() {
-        return TestContext.getInstance().sa();
     }
 
     public void performDriverOperation(String action, String value) {
@@ -169,6 +170,20 @@ public class BasePO extends automation.library.selenium.core.PageObject {
         }
     }
 
+    protected String isValidPage(By anchorElement, String expectedTitle) {
+        String message = "ok";
+        if (!this.exist(anchorElement)) {
+            message = "Anchor Element " + anchorElement + " do not exist";
+        }
+        if (!this.driver.getTitle().trim().contains(expectedTitle)) {
+            String stepName = "Navigation to Page";
+            message = message + "\n\r" + "The application is not in the expected page , current page: " + getDriver().getTitle()
+                    + " Page.";
+        }
+
+        return message;
+    }
+
 
     @Deprecated
     public Map<String, By> getUI(String className) {
@@ -207,6 +222,7 @@ public class BasePO extends automation.library.selenium.core.PageObject {
         }
     }
 
+    @Deprecated
     public void runKeyword() {
         Map<String, ArrayList<String>> locators = new HashMap<String, ArrayList<String>>();
 
@@ -269,6 +285,56 @@ public class BasePO extends automation.library.selenium.core.PageObject {
                 }
             }
             sa().assertAll();
+        }
+    }
+
+    /**
+     * --Copy from old framework
+     * --To be disposed
+     * Method to click sub menu items displayed after hovering on main menu
+     *
+     * @param mainMenu menu
+     * @param menuItem Item
+     */
+    @Deprecated
+    protected void clickMenuItem(Element mainMenu, Element menuItem) {
+        String menu = mainMenu.element().getText().trim();
+        String menuitem = menuItem.element().getText().trim();
+        try {
+            JavascriptExecutor js = (JavascriptExecutor) this.getDriver();
+            js.executeScript("arguments[0].setAttribute('class', 'megaMenu visible'); arguments[1].click();", mainMenu,
+                    menuItem);
+            //getReport().reportDoneEvent("Click Menu Item", menuitem + " from " + menu + " menu clicked successfully.");
+        } catch (RuntimeException ex) {
+            //getReport().reportFailEvent("Click Menu Item",
+            //        getReport().addModal("NOT able to click '" + menuitem + " . EXCEPTION CAUGHT : ", ex.toString()));
+        }
+    }
+
+    /***
+     * --Copy from old framework
+     * --To be disposed
+     * Method to switch into frame only when available
+     *
+     *
+     * @author : Adam Klein
+     ***/
+    @Deprecated
+    public void frameSwitch(int frameid) {
+        getDriver().switchTo().defaultContent();
+        try {
+            findElement(By.tagName("iframe"));
+        } catch (Exception ex) {
+            log.debug("Before frame Switch" + ex.getMessage());
+        }
+        waitPageToLoad();
+        for (int i = 0; i < frameid; i++) {
+            try {
+                getDriver().switchTo().frame(findElement(By.tagName("iframe")).element());
+            } catch (Exception e2) {
+                log.debug("Inside loop: Iteration" + i + "  " + e2.getMessage());
+            }
+            waitPageToLoad();
         }
     }
 }

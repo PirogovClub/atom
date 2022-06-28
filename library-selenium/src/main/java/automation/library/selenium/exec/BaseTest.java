@@ -4,6 +4,7 @@ import automation.library.common.ExcelHelper;
 import automation.library.common.JsonHelper;
 import automation.library.common.Property;
 import automation.library.common.TestContext;
+import automation.library.common.extendentassert.SoftAssertWithNotifications;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -26,21 +27,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static automation.library.selenium.exec.Constants.*;
+
 /**
  * Class to hold start up (set test context) and tear down (shut down browser) for selenium test. This class should be
  * extended by each test class in the test project
  */
 public class BaseTest {
 
+
     protected Logger log = LogManager.getLogger(this.getClass().getName());
     protected BasePO po;
     protected TestContext context = TestContext.getInstance();
+
+
+    protected  Map<String, Object> getTestData(){
+        return (Map<String, Object>) TestContext.getInstance().testdata().get(TEST_DATA_ARG_NAME);
+    }
 
     /**
      * return web driver for the current thread - can be used when running using TestNG
      */
     public WebDriver getDriver() {
-        log.debug("obtaining the driver for current thread");
+        //log.debug("obtaining the driver for current thread");
         return DriverFactory.getInstance().getDriver();
     }
 
@@ -48,7 +57,7 @@ public class BaseTest {
      * return web driver wait for the current thread - can be used when running using TestNG
      */
     public WebDriverWait getWait() {
-        log.debug("obtaining the wait for current thread");
+        //log.debug("obtaining the wait for current thread");
         return DriverFactory.getInstance().getWait();
     }
 
@@ -71,7 +80,7 @@ public class BaseTest {
     /**
      * SoftAssert instance from TestContext to be used - can be used when running using TestNG
      */
-    protected SoftAssert sa() {
+    protected SoftAssertWithNotifications sa() {
         return TestContext.getInstance().sa();
     }
 
@@ -122,9 +131,9 @@ public class BaseTest {
     @BeforeMethod
     public void startUp(Method method, Object[] args) {
         Test test = method.getAnnotation(Test.class);
-		
-		Map<String, String> map = (Map<String, String>) args[args.length - 1];
-		        
+
+        Map<String, String> map = (Map<String, String>) args[STACK_MAP_ID_IN_ARGS];
+
         if (!TestContext.getInstance().fwSpecificData().containsKey("fw.cucumberTest"))
             TestContext.getInstance().putFwSpecificData("fw.testDescription", test.description() + " (" + map.get("description") + ")");
         if (Property.getVariable("PROJECT_NAME") != null && !Property.getVariable("PROJECT_NAME").isEmpty())
@@ -132,6 +141,13 @@ public class BaseTest {
         if (Property.getVariable("BUILD_NUMBER") != null && !Property.getVariable("BUILD_NUMBER").isEmpty())
             TestContext.getInstance().putFwSpecificData("fw.buildNumber", Property.getVariable("BUILD_NUMBER"));
         DriverContext.getInstance().setDriverContext(map);
+
+        //Populating testdata with data from args
+        if (args.length > TESTDATA_MAP_ID_IN_ARGS) {
+            if (args[TESTDATA_MAP_ID_IN_ARGS] != null) {
+                TestContext.getInstance().testdata().put(Constants.TEST_DATA_ARG_NAME, args[TESTDATA_MAP_ID_IN_ARGS]);
+            }
+        }
     }
 
     /**
@@ -142,6 +158,25 @@ public class BaseTest {
         if (!TestContext.getInstance().fwSpecificData().containsKey("fw.cucumberTest")) {
             DriverFactory.getInstance().driverManager().updateResults(result.isSuccess() ? "passed" : "failed");
             DriverFactory.getInstance().quit();
+        }
+
+        finaliseSelenium2JmxRecording();
+    }
+
+    private void finaliseSelenium2JmxRecording() {
+        if (Property.getVariable("cukes.enableHar2Jmx") != null && Property.getVariable("cukes.enableHar2Jmx").equalsIgnoreCase("true")) {
+            try {
+                Class<?> har2jmxHelperClass = Class.forName("automation.library.conversion2jmx.selenium" + "." + "Har2JmxBaseTest");
+
+                Method method = har2jmxHelperClass.getMethod("finaliseRecording");
+                Object newInstance = har2jmxHelperClass.getDeclaredConstructor().newInstance();
+                method.invoke(newInstance);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Unable to find automation.library.conversion2jmx.selenium.Har2JmxBaseTest");
+                log.error("The library-conversion2jmx is needed in order to allow HAR recording");
+                throw new RuntimeException(e);
+            }
         }
     }
 }

@@ -96,7 +96,7 @@ public class AccessibilitySteps extends BaseSteps {
 
     /**
      * Basic test
-     * @param pageUrl
+     * @param pageUrl url to check
      */
     public void testAccessibility(String pageUrl) {
         getDriver().get(pageUrl);
@@ -107,8 +107,7 @@ public class AccessibilitySteps extends BaseSteps {
 
     /**
      * Test with options
-     *
-     * @param pageUrl
+     * @param pageUrl url of the page to be tested
      */
     public void testAccessibilityWithOptions(String pageUrl) {
         getDriver().get(pageUrl);
@@ -123,6 +122,9 @@ public class AccessibilitySteps extends BaseSteps {
 
     /**
      * Test includes and excludes
+     * @param pageUrl page url to check
+     * @param includedElem include element
+     * @param excludedElem exlucde element
      */
     public void testAccessibilityWithIncludesAndExcludes(String pageUrl, String includedElem, String excludedElem) {
         getDriver().get(pageUrl);
@@ -138,9 +140,8 @@ public class AccessibilitySteps extends BaseSteps {
 
     /**
      * Test a WebElement
-     *
-     * @param pageUrl
-     * @param tag
+     * @param pageUrl page url
+     * @param tag tag
      */
     public void testAccessibilityWithWebElement(String pageUrl, String tag) {
         getDriver().get(pageUrl);

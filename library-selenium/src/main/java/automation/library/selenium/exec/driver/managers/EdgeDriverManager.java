@@ -18,7 +18,7 @@ public class EdgeDriverManager extends DriverManager {
 		Capabilities cap = new Capabilities();
 		if (Property.getVariable("cukes.webdrivermanager") != null && Property.getVariable("cukes.webdrivermanager").equalsIgnoreCase("true")) {
     		if (Property.getVariable("cukes.edgeDriver")!=null) {
-				WebDriverManager.edgedriver().version(Property.getVariable("cukes.edgeDriver")).setup();
+				WebDriverManager.edgedriver().driverVersion(Property.getVariable("cukes.edgeDriver")).setup();
 			}else {
 				WebDriverManager.edgedriver().setup();
 			}

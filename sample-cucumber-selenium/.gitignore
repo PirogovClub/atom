@@ -25,3 +25,4 @@ logs
 
 #Mac OS
 *.DS_Store
+/gradle/

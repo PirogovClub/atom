@@ -1,0 +1,147 @@
+
+
+version='club.1.2.06-SNAPSHOT'
+group = 'com.accenture.atom'
+
+description= 'The selenium library contains a set of java helper classes that support browser and mobile app testing by leveraging Selenium and Appium.'
+
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+
+
+artifacts {
+    archives javadocJar
+    archives sourceJar
+}
+
+/*signing {
+    sign configurations.archives
+}*/
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            customizePom(pom)
+            groupId group
+            artifactId rootProject.name
+            version version
+
+            from components.java
+
+            // create the sign pom artifact
+           /* pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+            }*/
+
+            artifact(sourceJar) {
+                classifier = 'sources'
+            }
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
+
+            // create the signed artifacts
+           /* project.tasks.signArchives.signatureFiles.each {
+                artifact(it) {
+                    def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                    if (matcher.find()) {
+                        classifier = matcher.group(1)
+                    } else {
+                        classifier = null
+                    }
+                    extension = 'jar.asc'
+                }
+            }*/
+            //making some dependencies available to consume in other libs
+            //https://docs.gradle.org/current/userguide/publishing_maven.html
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+
+        }
+    }
+}
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        // eliminate test-scoped dependencies (no need in maven central POMs)
+      /*  root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        // add all items necessary for maven central publication
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            description description
+            name name
+            url 'https://github.com/Accenture/atom'
+            organization {
+                name org_name
+                url org_url
+            }
+            issueManagement {
+                system 'GitHub'
+                url 'https://github.com/Accenture/atom/issues'
+            }
+            licenses {
+                license {
+                    name license
+                    url 'https://github.com/Accenture/atom/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/Accenture/atom'
+                connection 'scm:git:git://github.com/Accenture/atom.git'
+                developerConnection 'scm:git:ssh://git@github.com:mautini/schemaorg-java.git'
+            }
+            developers {
+                developer {
+                    name dev_name
+                    id dev_id
+                    email dev_email
+                }
+            }
+        }*/
+    }
+}
+
+model {
+    tasks.generatePomFileForMavenJavaPublication {
+        destination = file("$buildDir/generated-pom.xml")
+    }
+    tasks.publishMavenJavaPublicationToMavenLocal {
+       /* dependsOn project.tasks.signArchives*/
+    }
+    tasks.publishMavenJavaPublicationToMavenRepository {
+       /* dependsOn project.tasks.signArchives*/
+    }
+}
+
+

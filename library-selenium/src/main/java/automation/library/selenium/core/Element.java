@@ -1,9 +1,13 @@
 package automation.library.selenium.core;
 
 import automation.library.common.Property;
+import automation.library.common.TestContext;
+import automation.library.common.listeners.*;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import lombok.Getter;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
@@ -13,6 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.w3c.dom.events.EventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,25 +25,36 @@ import java.util.Map;
 
 import static automation.library.selenium.core.Locator.Loc;
 import static automation.library.selenium.core.Locator.getLocator;
+import static automation.library.selenium.listener.SeleniumAtomEvents.*;
 
 
 /**
  * Utility class providing set of selenium wrapper methods
  */
 public class Element {
+    @Getter
+    private StopWatch stopWatch;
     private By by;
     private WebElement element;
     private WebDriver driver;
     private WebDriverWait wait;
+    private String elementReportCaption = "";
+    private String impactingData = "";
     protected Logger log = LogManager.getLogger(this.getClass().getName());
 
+
     public Element(WebDriver driver, WebElement e) {
+        stopWatch = new StopWatch();
+        stopWatch.start();
         this.driver = driver;
         wait = new WebDriverWait(driver, getWaitDuration());
         this.element = e;
     }
 
+
     public Element(WebDriver driver, WebElement e, By by) {
+        stopWatch = new StopWatch();
+        stopWatch.start();
         this.driver = driver;
         wait = new WebDriverWait(driver, getWaitDuration());
         this.element = e;
@@ -46,34 +62,61 @@ public class Element {
     }
 
     public Element(WebDriver driver, By by, int... delay) {
+        stopWatch = new StopWatch();
+        stopWatch.start();
         this.driver = driver;
         this.by = by;
         try {
             wait = new WebDriverWait(driver, delay.length > 0 ? delay[0] : getWaitDuration());
             this.element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
-            log.debug("element located successfully:" + by.toString());
+            stopWatch.stop();
+            log.debug("element located successfully:" + by.toString() + " took " + stopWatch.getTime() + " ms.");
         } catch (Exception e) {
             this.element = null;
-            log.debug("element not located:" + by.toString());
+            stopWatch.stop();
+            log.debug("element not located:" + by.toString() + " took " + stopWatch.getTime() + " ms.");
             log.debug(e.getMessage());
         }
     }
 
     public Element(WebDriver driver, ExpectedCondition<?> exp, int... delay) {
+        stopWatch = new StopWatch();
+        stopWatch.start();
         this.driver = driver;
         this.by = null;
         try {
             wait = new WebDriverWait(driver, delay.length > 0 ? delay[0] : getWaitDuration());
             this.element = (WebElement) wait.until(exp);
+            stopWatch.stop();
         } catch (Exception e) {
             this.element = null;
-            log.debug("element not located:" + by.toString());
+            stopWatch.stop();
+            log.debug("element not located:" + by.toString() + " took " + stopWatch.getTime() + "  ms.");
             log.debug(e.getMessage());
         }
     }
 
+    public Element withReportCaption(String captionToSet) {
+        this.elementReportCaption = captionToSet;
+        return this;
+    }
+
+    public Element withImpactingData(String impactingData) {
+        this.impactingData = impactingData;
+        return this;
+    }
+
     public By by() {
         return by;
+    }
+
+    public String getStringOfBy() {
+        if (this.by == null) {
+            return "Element locator is not define (null)";
+        } else {
+            return this.by.toString();
+        }
+
     }
 
     public WebElement element() {
@@ -86,6 +129,9 @@ public class Element {
 
     /**
      * searches again for the element using the by
+     *
+     * @param retries number of retries
+     * @return Element
      */
     public Element refind(int... retries) {
         log.info("Attempting to refind the element: " + by.toString());
@@ -110,8 +156,12 @@ public class Element {
         return this;
     }
 
+
     /**
      * Returns a nested element
+     *
+     * @param by locator
+     * @return ELement
      */
     public Element $(By by) {
         return new Element(driver, (WebElement) wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(this.element, by)), by);
@@ -124,6 +174,9 @@ public class Element {
 
     /**
      * Returns list of nested elements
+     *
+     * @param by locator
+     * @return Elements
      */
     public List<Element> $$(By by) {
         List<WebElement> els = (List<WebElement>) wait.until(ExpectedConditions.visibilityOfNestedElementsLocatedBy(this.element, by));
@@ -145,6 +198,9 @@ public class Element {
 
     /**
      * Returns a nested element
+     *
+     * @param by locator
+     * @return Element
      */
     public Element findElement(By by) {
         return new Element(driver, (WebElement) wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(this.element, by)), by);
@@ -157,6 +213,9 @@ public class Element {
 
     /**
      * Returns list of nested elements
+     *
+     * @param by locator
+     * @return list of Element
      */
     public List<Element> findElements(By by) {
         List<WebElement> els = (List<WebElement>) wait.until(ExpectedConditions.visibilityOfNestedElementsLocatedBy(this.element, by));
@@ -178,6 +237,9 @@ public class Element {
 
     /**
      * wait for the element to become visible
+     *
+     * @param retries number of retries
+     * @return Element
      */
     public Element visible(int... retries) {
         this.element = wait.until(ExpectedConditions.visibilityOf(this.element));
@@ -196,7 +258,11 @@ public class Element {
                 this.refind(retries);
                 return this.clickable(0);
             } else {
+                if (this.element == null) {
+                    throw new RuntimeException("Element with locator " + this.by() + " do not exist");
+                }
                 throw e;
+
             }
         }
         return this;
@@ -245,25 +311,25 @@ public class Element {
         }
     }
 
-    public Map<String,String> getAttributes(int... retries) {
+    public Map<String, String> getAttributes(int... retries) {
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
         String script = "var items = {}; " +
-                        "for (index = 0; index < arguments[0].attributes.length; ++index) " +
-                        "{ " +
-                            "items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value " +
-                        "}; " +
-                        "return items;";
+                "for (index = 0; index < arguments[0].attributes.length; ++index) " +
+                "{ " +
+                "items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value " +
+                "}; " +
+                "return items;";
 
-        Map<String,String> list;
+        Map<String, String> list;
 
         try {
-            list = (Map<String,String>)js.executeScript(script, this.element);
+            list = (Map<String, String>) js.executeScript(script, this.element);
             return list;
         } catch (Exception e) {
             if (!(retries.length > 0 && retries[0] == 0)) {
                 this.refind(retries);
-                list = (Map<String,String>)js.executeScript(script, this.element);
+                list = (Map<String, String>) js.executeScript(script, this.element);
                 return list;
             } else {
                 throw e;
@@ -285,6 +351,15 @@ public class Element {
         return this;
     }
 
+    public Element clearAndSendKeys(String val, int... retries) {
+        return this.clear(retries).sendKeys(val, retries);
+    }
+
+    public Element clearWaitAndSendKeys(String val, int... retries) {
+        return this.clear(retries).waitPageToLoad().sendKeys(val, retries);
+    }
+
+
     public Element sendKeys(String val, int... retries) {
         try {
             try {
@@ -300,15 +375,18 @@ public class Element {
         } catch (Exception e) {
             if (checkSendKeysJS()) {
                 sendKeysJS(val);
-            }
-            else{
+            } else {
                 throw e;
             }
         }
+        getEventManager().notify(ELEMENT_SEND_KEYS, new AtomEventTargetImpl(this));
         return this;
     }
 
     public Element click(int... retries) {
+
+        this.clickable();
+
         try {
             try {
                 this.element().click();
@@ -323,13 +401,57 @@ public class Element {
         } catch (Exception e) {
             if (checkClickJS()) {
                 clickJS();
-            }
-            else{
+            } else {
                 throw e;
             }
         }
+        getEventManager().notify(ELEMENT_CLICKED_OK, new AtomEventTargetImpl(this));
         return this;
     }
+
+
+    /**
+     * Set checkbox to check or uncheck no matter what initial state was
+     *
+     * @param setToCheck - if "true" would be left as checked, if "false" left as unchecked
+     * @param appName    - Application name for determination witch parameter look to check if selected or not
+     * @return Element in set condition
+     */
+    public Element setCheckedStatus(Boolean setToCheck, AppNames appName) {
+
+        Element elementToReturn = this;
+        boolean isSelected;
+
+        switch (appName) {
+            case eapp:
+            default:
+                isSelected = this.getAttribute("class").contains("radioChecked");
+        }
+
+        if (setToCheck) {
+            if (!isSelected) {
+                elementToReturn = this.clickable().click();
+            }
+        } else {
+            if (isSelected) {
+                elementToReturn = this.clickable().click();
+            }
+        }
+        return elementToReturn;
+
+    }
+
+    /**
+     * Set checkbox to check or uncheck no matter what initial state was In Eapp application
+     *
+     * @param setToCheck - if "true" would be left as checked, if "false" left as unchecked
+     * @return Element in set condition
+     */
+
+    public Element setCheckedStatusEapp(Boolean setToCheck) {
+        return setCheckedStatus(setToCheck, AppNames.eapp);
+    }
+
 
     /**
      * send text using character chord to overwrite field
@@ -472,6 +594,11 @@ public class Element {
         return this;
     }
 
+    public Boolean isVisible() {
+        return (this.visible() != null);
+    }
+
+
     /**
      * Return all options within a dropdown as string array
      */
@@ -557,12 +684,41 @@ public class Element {
         return this;
     }
 
+    public Element moveTo(int xOffset, int yOffset) {
+        Actions action = new Actions(driver);
+        action.moveToElement(this.element,xOffset,  yOffset).build().perform();
+        return this;
+    }
+
+    /**
+     * moveToElement* method moves to the middle of element
+     * @param xOffset : X offset from the middle
+     * @param yOffset : Y offset from the middle
+     * @return
+     */
+    public Element moveToAndClick(int xOffset, int yOffset) {
+        Actions action = new Actions(driver);
+        action.moveToElement(this.element,xOffset,  yOffset).click().build().perform();
+        return this;
+    }
+
     /**
      * Performs mouse action move to a parent element on the screen, locate child element and click
      */
     public Element moveAndClick(WebElement elChild) {
+        return moveAndClick(new Element(driver, elChild));
+    }
+
+    public Element moveAndClick(Element elChild) {
         Actions action = new Actions(driver);
         action.moveToElement(this.element).build().perform();
+        elChild.click();
+        return this;
+    }
+
+    public Element moveAndClick(int xOffset, int yOffset, Element elChild) {
+        Actions action = new Actions(driver);
+        action.moveToElement(this.element, xOffset,  yOffset).build().perform();
         elChild.click();
         return this;
     }
@@ -586,6 +742,15 @@ public class Element {
     }
 
     /**
+     * Performs mouse action release button
+     */
+    public Element dblClick() {
+        Actions action = new Actions(driver);
+        action.doubleClick(this.element).build().perform();
+        return this;
+    }
+
+    /**
      * Highlights an element with a blue border.....useful when debugging/taking screenshots
      */
     public Element highlight() {
@@ -600,10 +765,10 @@ public class Element {
      * Returns duration for specified waits
      */
     public static int getWaitDuration() {
-        final int defaultWait = 10;
+        final int defaultWait = Constants.DEFAULT_WAIT;
         int duration;
         try {
-            duration = Integer.parseInt(System.getProperty("cukes.selenium.defaultWait"));
+            duration = Property.getProperties(automation.library.selenium.exec.Constants.SELENIUMRUNTIMEPATH).getInt(Constants.DEFAULT_WAIT_KEY);
         } catch (Exception e) {
             duration = defaultWait;
         }
@@ -611,10 +776,10 @@ public class Element {
     }
 
     public static int getFindRetries() {
-        final int defaultFindRetries = 10;
+        final int defaultFindRetries = 1;
         int refind;
         try {
-            refind = Integer.parseInt(System.getProperty("cukes.selenium.defaultFindRetries"));
+            refind = Property.getProperties(automation.library.selenium.exec.Constants.SELENIUMRUNTIMEPATH).getInt(Constants.DEFAULT_RETRY_KEY);
         } catch (Exception e) {
             refind = defaultFindRetries;
         }
@@ -655,6 +820,45 @@ public class Element {
         }
         return this;
     }
+
+    /**
+     * In developing mode can be used to slowdown execution, delay to be set in
+     * BASEPATH + "config/selenium/" + "devMode.properties"
+     * <p>
+     * if Now value in the property file would have wait for 0 milliseconds
+     *
+     * @return Element
+     */
+    public Element devSleep() {
+        return devSleep(Property.getProperties(Constants.DEV_MOD_PATH).getInt("devModeDelay", 0));
+    }
+
+    /**
+     * In developing mode can be used to slowdown execution,
+     *
+     * @param millisecond - delays in milliseconds
+     * @return Element
+     */
+    public Element devSleep(int millisecond) {
+        try {
+            Thread.sleep(millisecond);
+        } catch (InterruptedException e) {
+            log.error(e.getStackTrace());
+        }
+        return this;
+    }
+
+
+    /**
+     * Wait for page to load
+     */
+    public Element waitPageToLoad() {
+        JsLoadWait.domLoaded(driver, wait);
+        JsLoadWait.jqueryLoaded(driver, wait);
+        JsLoadWait.angularLoaded(driver, wait);
+        return this;
+    }
+
 
     /**
      * Get count of number of table rows
@@ -769,4 +973,17 @@ public class Element {
         return tabledata;
 
     }
+
+    public String getElementReportCaption() {
+        return elementReportCaption;
+    }
+
+    public String getImpactingData() {
+        return impactingData;
+    }
+
+    private AtomEventManager getEventManager() {
+        return TestContext.getInstance().getAtomEventManager();
+    }
+
 }

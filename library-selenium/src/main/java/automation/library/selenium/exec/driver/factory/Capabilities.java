@@ -4,14 +4,21 @@ import automation.library.common.Property;
 import automation.library.common.TestContext;
 import automation.library.selenium.exec.Constants;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Proxy;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
  * Class to set the desired capabilities
  */
 public class Capabilities {
+
+    protected Logger log = LogManager.getLogger(this.getClass().getName());
 
     private DesiredCapabilities dc;
 
@@ -33,16 +40,22 @@ public class Capabilities {
         if (TestContext.getInstance().fwSpecificData().containsKey("fw.buildNumber"))
             dc.setCapability("build", TestContext.getInstance().getFwSpecificData("fw.buildNumber"));
 
-        if (TestContext.getInstance().getFwSpecificData("fw.appPackage") != null)
-            dc.setCapability("appPackage", TestContext.getInstance().getFwSpecificData("fw.appPackage"));
+        //IOS does not require appPackage and appActivity capabilities.
+        if(!((map.containsKey("platformName") && map.get("platformName").toLowerCase().contains("ios")) ||
+                (map.containsKey("platform") && map.get("platform").toLowerCase().contains("ios")))){
+            if (TestContext.getInstance().getFwSpecificData("fw.appPackage") != null)
+                dc.setCapability("appPackage", TestContext.getInstance().getFwSpecificData("fw.appPackage"));
 
-        if (TestContext.getInstance().getFwSpecificData("fw.appActivity") != null)
-            dc.setCapability("appActivity", TestContext.getInstance().getFwSpecificData("fw.appActivity"));
+            if (TestContext.getInstance().getFwSpecificData("fw.appActivity") != null)
+                dc.setCapability("appActivity", TestContext.getInstance().getFwSpecificData("fw.appActivity"));
+        }
 
         for (Map.Entry<String, String> pair : map.entrySet()) {
             if (!pair.getKey().equalsIgnoreCase("seleniumServer") && !pair.getKey().equalsIgnoreCase("description"))
                 dc.setCapability(pair.getKey(), pair.getValue());
         }
+
+        setProxyCap();
 
         //TEMP
         PropertiesConfiguration props = Property.getProperties(Constants.SELENIUMRUNTIMEPATH);
@@ -58,6 +71,26 @@ public class Capabilities {
 
     public DesiredCapabilities getCap() {
         return dc;
+    }
+
+    private void setProxyCap(){
+        if(Property.getVariable("cukes.enableHar2Jmx") != null && Property.getVariable("cukes.enableHar2Jmx").equalsIgnoreCase("true")) {
+            Proxy seleniumProxy = null;
+
+            try {
+                Class<?> har2jmxCapabilitiesClass = Class.forName("automation.library.conversion2jmx.selenium" + "." + "Har2JmxCapabilities");
+
+                Method method = har2jmxCapabilitiesClass.getMethod("setProxyCap");
+                Object newInstance = har2jmxCapabilitiesClass.getDeclaredConstructor().newInstance();
+                seleniumProxy = (Proxy)method.invoke(newInstance);
+                dc.setCapability(CapabilityType.PROXY, seleniumProxy);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Unable to find automation.library.conversion2jmx.selenium.Har2JmxCapabilities");
+                log.error("The library-conversion2jmx is needed in order to allow HAR recording");
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }

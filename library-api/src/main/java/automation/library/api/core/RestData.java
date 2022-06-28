@@ -21,6 +21,9 @@ public class RestData {
 	private JsonPath respJsonPath = null;
 	private String respString = null;
 
+
+	private String contextType = null;
+
 	/**
 	 * @return RequestSpecification instance for the current api call.
 	 */
@@ -115,7 +118,7 @@ public class RestData {
 
 	/**
 	 * Sets requestJSON with supplied requestJSON.
-	 * @param requestJSON
+	 * @param requestJSON input request body
 	 */
 	public void setRequestJSON(JSONObject requestJSON) {
 		this.requestJSON = requestJSON;
@@ -123,10 +126,19 @@ public class RestData {
 
 	/**
 	 * Sets requestString with supplied requestString.
-	 * @param requestString
+	 * @param requestString input request body
 	 */
 	public void setRequestString(String requestString) {
 		this.requestString = requestString;
 	}
-	
+
+	public String getContextType() {
+		return contextType;
+	}
+
+	public void setContextType(String contextType) {
+		this.contextType = contextType;
+	}
+
+
 }

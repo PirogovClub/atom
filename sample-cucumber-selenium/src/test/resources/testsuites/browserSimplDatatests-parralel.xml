@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="suite1" parallel="classes" thread-count="10" data-provider-thread-count="10">
+    <test name="browser1">
+        <classes>
+         	<class name="runners.BrowserTestSimplExternalData"/>
+        </classes>
+    </test>
+</suite>

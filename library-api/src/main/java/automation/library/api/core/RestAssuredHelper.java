@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -88,6 +89,30 @@ public class RestAssuredHelper {
 
         return request;
     }
+
+    public static RequestSpecification setMultiPart(RequestSpecification request, File file){
+        request.multiPart(file);
+        return request;
+    }
+
+    public static RequestSpecification setMultiPart(RequestSpecification request,String controlName, File file){
+        request.multiPart(controlName, file);
+        return request;
+    }
+    public static RequestSpecification setMultiPart(RequestSpecification request,String controlName, String contentBody){
+        request.multiPart(controlName, contentBody);
+        return request;
+    }
+
+    public static RequestSpecification setMultiPart(RequestSpecification request,String controlName, File file, String mimeType){
+        request.multiPart(controlName, file, mimeType);
+        return request;
+    }
+    public static RequestSpecification setMultiPart(RequestSpecification request,String controlName, String contentBody, String mimeType){
+        request.multiPart(controlName, contentBody, mimeType);
+        return request;
+    }
+
 
     public static RequestSpecification setParamList(RequestSpecification request, String key, List<String> val) {
         return request.param(key, val);
@@ -163,7 +188,7 @@ public class RestAssuredHelper {
         }
     }
 
-    public static void checkBody(JsonPath jsonPath, Object[] obj, String element, String matcher) {
+    public static void checkBody(JsonPath jsonPath, Object[] obj, String element, String matcher) throws JSONException {
         Object act = jsonPath.get(element);//from(respString).get(element);
         Object nullObj = null;
         List<Object> list = null;
@@ -378,11 +403,12 @@ public class RestAssuredHelper {
             JsonPath jsonPath = new JsonPath(responseString);
             try {
                 checkBody(jsonPath, obj, data.getElement(), data.getMatcher());
-            } catch (AssertionError e) {
+            } catch (AssertionError | JSONException e) {
                 TestContext.getInstance().sa().assertNull(e.getMessage());
             }
         });
         TestContext.getInstance().sa().assertAll();
+
 
     }
 

@@ -1,6 +1,7 @@
 package automation.library.selenium.exec.driver.managers;
 
 import automation.library.common.Property;
+import automation.library.selenium.exec.Constants;
 import automation.library.selenium.exec.driver.factory.Capabilities;
 import automation.library.selenium.exec.driver.factory.DriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -15,10 +16,11 @@ public class PhantomJSDriverManager extends DriverManager {
 	@Override
 	public void createDriver(){
 		Capabilities cap = new Capabilities();
-		if (Property.getVariable("cukes.webdrivermanager") != null && Property.getVariable("cukes.webdrivermanager").equalsIgnoreCase("true")) {
+		String useDriverDownloadOnTheFly = Property.getProperty(Constants.SELENIUMRUNTIMEPATH,"cukes.webdrivermanager");
+		if (useDriverDownloadOnTheFly != null && useDriverDownloadOnTheFly.equalsIgnoreCase("true")) {
     		WebDriverManager.phantomjs().setup();
     		if (Property.getVariable("cukes.phantomjsDriver")!=null) {
-				WebDriverManager.phantomjs().version(Property.getVariable("cukes.phantomjsDriver")).setup();
+				WebDriverManager.phantomjs().driverVersion(Property.getVariable("cukes.phantomjsDriver")).setup();
 			}else {
 				WebDriverManager.phantomjs().setup();
 			}

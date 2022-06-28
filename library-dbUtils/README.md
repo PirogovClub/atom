@@ -1,7 +1,7 @@
 ## DbUtils Library
 
 ### 1. Purpose and Contents
-The 'dbUtils' library contains a set of java helper classes that support database operation and can be reused by projetcsa helper classes:
+The 'dbUtils' library contains a set of java helper classes that support database operation and can be reused by projects helper classes:
 
 | Class         | Purpose                                                      |
 | --------------| ------------------------------------------------------------ |
@@ -11,6 +11,9 @@ The 'dbUtils' library contains a set of java helper classes that support databas
 | ElasticHelper | Connect and run the queries or update for elastic search |
 
 ### 2. Usage
+command line paramiter:
+atom.db.utils.property.file
+
 #### 2.1 Database Helper 
 
 Connection details can be added to the [environment properties](#environment-properties) file and will be picked up and used by the framework. The examples below show a Sybase and Oracle connection setting.

@@ -19,7 +19,7 @@ public abstract class DriverManager {
 		}
 		return driver;
 	}
-	
+
 	public WebDriver returnDriver(){
 		return driver;
 	}
@@ -59,4 +59,4 @@ public abstract class DriverManager {
 	protected abstract void createDriver();
 
 	public abstract void updateResults(String result);
-} 
+}

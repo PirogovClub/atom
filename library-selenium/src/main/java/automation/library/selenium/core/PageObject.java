@@ -1,10 +1,12 @@
 package automation.library.selenium.core;
 
 import automation.library.common.Property;
+import automation.library.common.TestContext;
+
+import automation.library.common.extendentassert.SoftAssertWithNotifications;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
@@ -15,7 +17,6 @@ import org.testng.asserts.SoftAssert;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +31,6 @@ public class PageObject {
     protected Logger log = LogManager.getLogger(this.getClass().getName());
     protected WebDriver driver;
     protected WebDriverWait wait;
-    protected SoftAssert sa = null;
 
     public PageObject(WebDriver driver) {
         this.driver = driver;
@@ -57,12 +57,15 @@ public class PageObject {
         PageFactory.initElements(getDriver(), obj);
     }
 
-    /*
+    /**
      * Set of common methods for Page Objects which are defined with either
      * standard By locators or PageFactory
+     *
+     * @param url
+     * @return
      */
     public PageObject gotoURL(String url) {
-        log.debug("navigating to url:" + url);
+        log.debug("navigating to url:{}", url);
         getDriver().get(url);
         return this;
     }
@@ -71,73 +74,12 @@ public class PageObject {
      * Wait for page to load
      */
     public PageObject waitPageToLoad() {
-        domLoaded();
-        jqueryLoaded();
-        //angularLoaded();
+        JsLoadWait.domLoaded(getDriver(), getWait());
+        JsLoadWait.jqueryLoaded(getDriver(), getWait());
+        JsLoadWait.angularLoaded(getDriver(), getWait());
         return this;
     }
 
-    /**
-     * Wait for page to load based on document.readyState=complete
-     */
-    public void domLoaded() {
-        log.debug("checking that the DOM is loaded");
-        final JavascriptExecutor js = (JavascriptExecutor) getDriver();
-        Boolean domReady = js.executeScript("return document.readyState").equals("complete");
-
-        if (!domReady) {
-            getWait().until(new ExpectedCondition<Boolean>() {
-                public Boolean apply(WebDriver d) {
-                    return (js.executeScript("return document.readyState").equals("complete"));
-                }
-            });
-        }
-    }
-
-    /**
-     * Wait for JQuery to load
-     */
-    private void jqueryLoaded() {
-        log.debug("checking that any JQuery operations complete");
-        final JavascriptExecutor js = (JavascriptExecutor) getDriver();
-
-        if ((Boolean) js.executeScript("return typeof jQuery != 'undefined'")) {
-            boolean jqueryReady = (Boolean) js.executeScript("return jQuery.active==0");
-
-            if (!jqueryReady) {
-                getWait().until(new ExpectedCondition<Boolean>() {
-                    public Boolean apply(WebDriver d) {
-                        return (Boolean) js.executeScript("return window.jQuery.active === 0");
-                    }
-                });
-            }
-        }
-    }
-
-    /**
-     * Wait for AngularJs to load
-     */
-    public void angularLoaded() {
-        log.debug("checking that any AngularJS operations complete");
-        final JavascriptExecutor js = (JavascriptExecutor) getDriver();
-        if ((Boolean) js.executeScript("if (window.angular){return true;}")) {
-            Boolean angularInjectorUndefined = (Boolean) js.executeScript("return angular.element(document).find('body').injector() === undefined");
-
-            if (!angularInjectorUndefined) {
-                Boolean angularReady = (Boolean) js.executeScript("return angular.element(document).find('body').injector().get('$http').pendingRequests.length === 0");
-
-                if (!angularReady) {
-                    getWait().until(new ExpectedCondition<Boolean>() {
-                        public Boolean apply(WebDriver d) {
-                            return js.executeScript("return angular.element(document).find('body').injector().get('$http').pendingRequests.length === 0").equals(true);
-                        }
-                    });
-                }
-            } else {
-                log.debug("no AngularJS injector defined so cannot wait");
-            }
-        }
-    }
 
 
     /*
@@ -149,60 +91,94 @@ public class PageObject {
 
     /**
      * Returns first element occurrence matching the supplied locator if an element exists in DOM
+     *
+     * @param by
+     * @return
      */
     public Element $(By by) {
         return findElement(by);
-//        Element el = new Element(driver, by);
-//        return el.scroll();
+    }
+
+    public Element $(ExtendedBy element) {
+        return findElement(element);
+    }
+
+    public Element $(By by, String reportCaption) {
+        return findElement(by).withReportCaption(reportCaption);
+    }
+
+    public Element $(By by, String reportCaption, String impactingData) {
+        return findElement(by).withReportCaption(reportCaption).withImpactingData(impactingData);
     }
 
     /**
      * return first element using a locator type (from enum), string locator value and optional tokens to
      * substitute into the locator (this is useful for dynamic locators)
+     *
+     * @param type
+     * @param locator
+     * @param variables
+     * @return
      */
     public Element $(Loc type, String locator, Object... variables) {
         Element el = new Element(driver, getLocator(type, locator, variables));
-        return el.scroll();
+        return el;
     }
 
     /**
      * Returns first element occurrence matching the supplied locator based on the supplied wait condition
+     *
+     * @param exp
+     * @param delay
+     * @return
      */
     public Element $(ExpectedCondition<?> exp, int... delay) {
         Element el = new Element(driver, exp, delay);
-        return el.scroll();
+        return el;
     }
 
     /**
      * Finds first nested element within current element matching the supplied locator
+     *
+     * @param by
+     * @param sub
+     * @param delay
+     * @return
      */
     public Element $(By by, By sub, int... delay) {
         Element el = new Element(driver, ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub), delay);
-        return el.scroll();
+        return el;
     }
 
     /**
      * Returns all element occurrences matching the supplied locator if the elements exist in DOM
+     *
+     * @param by
+     * @return
      */
     public List<Element> $$(By by) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), getWaitDuration());
-        List<WebElement> els = getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
-        List<Element> elements = setElements(els);
-        if (elements.size() > 0) {
-            elements.get(0).scroll();
+        List<Element> elements = new ArrayList<>();
+        Element testElement = new Element(driver, by);
+        if (testElement.element() != null) {
+            WebDriverWait localWait = new WebDriverWait(getDriver(), getWaitDuration());
+            List<WebElement> els = localWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+            elements = setElements(els);
         }
         return elements;
     }
 
-
-
     /**
      * Returns all elements using a locator type (from enum), string locator value and optional tokens to substitute
      * into the locator (this is useful for dynamic locators)
+     *
+     * @param type
+     * @param locator
+     * @param variables
+     * @return
      */
     public List<Element> $$(Loc type, String locator, Object[]... variables) {
         WebDriverWait wait = new WebDriverWait(getDriver(), getWaitDuration());
-        List<WebElement> els = getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(getLocator(type, locator, variables)));
+        List<WebElement> els = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(getLocator(type, locator, variables)));
         List<Element> elements = setElements(els);
         if (elements.size() > 0) {
             elements.get(0).scroll();
@@ -214,8 +190,8 @@ public class PageObject {
      * Returns all element occurrences matching the supplied locator if the elements exist in DOM
      */
     public List<Element> $$(ExpectedCondition<List<WebElement>> exp, int... delay) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
-        List<WebElement> els = getWait().until(exp);
+        WebDriverWait localWait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
+        List<WebElement> els = localWait.until(exp);
         List<Element> elements = setElements(els);
         if (elements.size() > 0) {
             elements.get(0).scroll();
@@ -225,10 +201,15 @@ public class PageObject {
 
     /**
      * Finds all elements within current element matching the supplied locator
+     *
+     * @param by    locator
+     * @param sub   sublocator
+     * @param delay web driver wait delay
+     * @return list of elements
      */
     public List<Element> $$(By by, By sub, int... delay) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
-        List<WebElement> els = wait.until(ExpectedConditions.presenceOfNestedElementsLocatedBy(by, sub));
+        WebDriverWait localWait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
+        List<WebElement> els = localWait.until(ExpectedConditions.presenceOfNestedElementsLocatedBy(by, sub));
         List<Element> elements = setElements(els);
         if (elements.size() > 0) {
             elements.get(0).scroll();
@@ -241,70 +222,56 @@ public class PageObject {
      */
     public Element findElement(By by) {
         Element el = new Element(driver, by);
-        return el.scroll();
-    }
-
-    /**
-     * return first element using a locator type (from enum), string locator value and optional tokens to
-     * substitute into the locator (this is useful for dynamic locators)
-     */
-    public Element findElement(Loc type, String locator, Object... variables) {
-        Element el = new Element(driver, getLocator(type, locator, variables));
-        return el.scroll();
+        return el;
     }
 
     /**
      * Returns first element occurrence matching the supplied locator if an element exists in DOM
      */
-    public Element findElement(ExpectedCondition<?> exp, int... delay) {
-        Element el = new Element(driver, exp, delay);
-        return el.scroll();
-    }
-
-    /**
-     * Finds first nested element within current element matching the supplied locator
-     */
-    public Element findElement(By by, By sub, int... delay) {
-        Element el = new Element(driver, ExpectedConditions.presenceOfNestedElementLocatedBy(by, sub), delay);
-        return el.scroll();
+    public Element findElement(ExtendedBy element) {
+        Element el = new Element(driver, element.getLocator())
+                .withImpactingData(element.getImpactingData())
+                .withReportCaption(element.getReportCaption());
+        return el;
     }
 
     /**
      * wait for elements to present, returns all element occurrences matching the supplied locator if the elements exist
      * else empty list
      */
-    public List<Element> findElements(By by,int...delay) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
-        try{
-            List<WebElement> els = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+    public List<Element> findElements(By by, int... delay) {
+        WebDriverWait localWait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
+        try {
+            List<WebElement> els = localWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
             ExpectedConditions.numberOfElementsToBeMoreThan(by, 2);
             List<Element> elements = setElements(els);
             if (elements.size() > 0) {
                 elements.get(0).scroll();
             }
             return elements;
-        }catch (Exception e){
+        } catch (Exception e) {
             return Collections.emptyList();
         }
     }
 
     /**
      * Wait for elements to present, Returns all element occurrences matching the supplied locator if the elements exist in DOM
-     * @param type one of the locator type from one of the enum in automation.library.selenium.core.Locator
-     * @param locator locator
+     *
+     * @param type      one of the locator type from one of the enum in automation.library.selenium.core.Locator
+     * @param locator   locator
      * @param variables optional variable if need to be parsed in locator
      * @return all elements occurance matching the locator or empty list
      */
     public List<Element> findElements(Loc type, String locator, Object[]... variables) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), getWaitDuration());
-        try{
-            List<WebElement> els = getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(getLocator(type, locator, variables)));
+        WebDriverWait localWait = new WebDriverWait(getDriver(), getWaitDuration());
+        try {
+            List<WebElement> els = localWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(getLocator(type, locator, variables)));
             List<Element> elements = setElements(els);
             if (elements.size() > 0) {
                 elements.get(0).scroll();
             }
             return elements;
-        }catch (Exception e){
+        } catch (Exception e) {
             return Collections.emptyList();
         }
     }
@@ -313,33 +280,32 @@ public class PageObject {
      * Wait for elements to present, returns all element occurrences matching the supplied exp if the elements exist in DOM
      */
     public List<Element> findElements(ExpectedCondition<List<WebElement>> exp, int... delay) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
-        try{
-            List<WebElement> els = wait.until(exp);
+        WebDriverWait localWait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
+        try {
+            List<WebElement> els = localWait.until(exp);
             List<Element> elements = setElements(els);
             if (elements.size() > 0) {
                 elements.get(0).scroll();
             }
             return elements;
-        }catch (Exception e){
+        } catch (Exception e) {
             return Collections.emptyList();
         }
-
     }
 
     /**
      * Finds all elements within current element matching the supplied locator
      */
     public List<Element> findElements(By by, By sub, int... delay) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
-        try{
-            List<WebElement> els = wait.until(ExpectedConditions.presenceOfNestedElementsLocatedBy(by, sub));
+        WebDriverWait localWait = new WebDriverWait(getDriver(), delay.length > 0 ? delay[0] : getWaitDuration());
+        try {
+            List<WebElement> els = localWait.until(ExpectedConditions.presenceOfNestedElementsLocatedBy(by, sub));
             List<Element> elements = setElements(els);
-            if (elements.size() > 0) {
+            if (!elements.isEmpty()) {
                 elements.get(0).scroll();
             }
             return elements;
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error(e.toString());
             return Collections.emptyList();
         }
@@ -351,11 +317,14 @@ public class PageObject {
     //TODO - Describe what happens when not found any clickable
     public Element findClickable(By by, int... delay) {
         Element el = new Element(driver, by, delay).clickable();
-        return el.scroll();
+        return el;
     }
 
     /**
      * Builds and returns list of nested elements
+     *
+     * @param els
+     * @return
      */
     public List<Element> setElements(List<WebElement> els) {
         List<Element> list = new ArrayList<Element>();
@@ -367,19 +336,46 @@ public class PageObject {
 
     /**
      * Checks for element existence
+     *
+     * @param by
+     * @param delay
+     * @return
      */
     public boolean exist(By by, int... delay) {
         Element el = new Element(driver, by, delay);
-        Boolean exists = (el.element() == null) ? false : true;
-        return exists;
+        return el.element() != null;
     }
 
     /**
      * is this element displayed or not?
+     *
+     * @param by
+     * @return
      */
     public boolean isVisible(By by) {
-            return findElement(by).element().isDisplayed();
+        return findElement(by).element().isDisplayed();
     }
+
+    /**
+     * is this element displayed or not?
+     *
+     * @param by
+     * @return
+     */
+    public boolean isDisplayed(By by) {
+        return findElement(by).element().isDisplayed();
+    }
+
+    /**
+     * is thsi element enabled or not?
+     *
+     * @param by locator of element
+     * @return true if enabled
+     */
+    public boolean isEnables(By by) {
+        return findElement(by).element().isEnabled();
+    }
+
 
     /**
      * Returns duration for specified waits as defined in "/src/test/resources/config/selenium/runtime.properties" or
@@ -390,21 +386,21 @@ public class PageObject {
         int duration;
         try {
             duration = Property.getProperties(Constants.SELENIUMRUNTIMEPATH).getInt("defaultWait");
-            log.debug("selenium getDriver() getWait() time set from environment properties: " + duration);
+            log.debug("selenium getDriver() getWait() time set from environment properties: {}", duration);
         } catch (Exception e) {
             duration = defaultWait;
-            log.debug("selenium getDriver() getWait() time not available from environment properties...default applied : " + defaultWait);
+            log.debug("selenium getDriver() getWait() time not available from environment properties...default applied : {}", defaultWait);
         }
         return duration;
     }
 
     /**
      * Switch the focus of future commands for this driver to the window with the given handle.
+     *
      * @param parent he name of the window or the handle which can be used to iterate over all open windows
-//     * @return This driver focused on the given window
      */
     public void switchWindow(String parent) {
-        log.debug("parent window handle:" + parent);
+        log.debug("parent window handle: {}", parent);
         switching:
         while (true) {
             for (String handle : getDriver().getWindowHandles()) {
@@ -415,6 +411,16 @@ public class PageObject {
                 }
             }
         }
+    }
+
+    /**
+     * An expectation for checking whether the given frame is available to switch to. <p> If the frame
+     * is available it switches the given driver to the specified frameIndex.
+     *
+     * @param frameLocator used to find the frame (index)
+     */
+    public void switchFrame(int frameLocator) {
+        getWait().until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameLocator));
     }
 
     /**
@@ -454,11 +460,8 @@ public class PageObject {
         getDriver().switchTo().defaultContent();
     }
 
-    public SoftAssert sa() {
-        if (sa == null) {
-            sa = new SoftAssert();
-        }
-        return sa;
+    protected SoftAssertWithNotifications sa() {
+        return TestContext.getInstance().sa();
     }
 
     /**

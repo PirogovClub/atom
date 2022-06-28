@@ -1,5 +1,7 @@
 package automation.library.cucumber.selenium;
 
+import automation.library.common.extendentassert.SoftAssertWithNotifications;
+import automation.library.cucumber.listener.CucumberEventTypes;
 import automation.library.selenium.exec.BasePO;
 import io.cucumber.java8.En;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +21,8 @@ public class BaseSteps implements En {
 
 	protected Logger log = LogManager.getLogger(this.getClass().getName());
 	protected BasePO po;
+
+
 	
 	public BaseSteps(){
 	}
@@ -27,6 +31,7 @@ public class BaseSteps implements En {
 		log.debug("obtaining an instance of the base page objects");
 		if (po == null)
 			po = new BasePO();
+
 		return po;
 	}
 
@@ -55,18 +60,7 @@ public class BaseSteps implements En {
 		return duration; 
 	}
 
-	public SoftAssert sa() {
+	public SoftAssertWithNotifications sa() {
 		return TestContext.getInstance().sa();
 	}
-
-//	protected void addScreenshot() {
-//		try {
-//			Reporter.addScreenCaptureFromPath("." + File.separator + "Screenshots" + File.separator
-//					+ saveScreenshot(grabScreenshot(), Reporter.getScreenshotPath()).getName());
-//		} catch (IOException e) {
-//			Reporter.addStepLog("Warning: could not add screenshot");
-//			log.warn("could not add screenshot", e);
-//		}
-//	}
-
 }

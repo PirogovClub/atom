@@ -1,13 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="suite1" parallel="classes" thread-count="10" data-provider-thread-count="2">
+<suite name="suite1" parallel="classes" thread-count="10" data-provider-thread-count="10">
     <test name="browser1">
         <classes>
          	<class name="runners.BrowserTest1"/>
         </classes>
-    </test>	
-<!--    <test name="browser2">-->
-<!--        <classes>-->
-<!--         	<class name="runners.BrowserTest1"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    </test>
 </suite>

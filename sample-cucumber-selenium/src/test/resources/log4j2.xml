@@ -11,6 +11,15 @@
     </appenders>
 
     <loggers>
+
+        <logger name="org.apache.hc.client5">
+            <appender-ref ref="Console" level="error"/>
+            <appender-ref ref="MyFile" level="error"/>
+        </logger>
+        <logger name="io.github.bonigarcia">
+            <appender-ref ref="Console" level="error"/>
+            <appender-ref ref="MyFile" level="error"/>
+        </logger>
         <root level="debug">
             <appender-ref ref="Console" level="debug"/>
             <appender-ref ref="MyFile" level="debug"/>

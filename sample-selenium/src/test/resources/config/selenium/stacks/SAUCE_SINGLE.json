@@ -1,8 +1,0 @@
-[
-		{
-			"seleniumServer":"saucelabs",
-			"browserName":"chrome",
-			"version":"54",
-			"platform":"Windows 10"
-		}
-]
