@@ -1,39 +1,38 @@
-package automation.library.cucumber.api;
+package steps;
 
-import automation.library.api.core.*;
+import automation.library.api.core.ResponseValidator;
+import automation.library.api.core.RestAssuredHelper;
+import automation.library.api.core.RestContext;
+import automation.library.api.core.SwaggerSoftValidationFilter;
 import automation.library.common.Property;
 import automation.library.common.TestContext;
+import automation.library.common.extendentassert.SoftAssertWithNotifications;
 import automation.library.cucumber.core.Constants;
 import automation.library.cucumber.core.StepDataTestContext;
-import com.fasterxml.jackson.core.JsonParseException;
-//import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.sl.In;
 import io.restassured.filter.Filter;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
-import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static automation.library.common.JsonHelper.getJSONData;
 import static io.restassured.RestAssured.given;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 /**
@@ -41,13 +40,18 @@ import static org.testng.Assert.fail;
  * rest api calls to be configured and invoked from cucumber features along
  * with detailed response validation.
  */
-public class RestAssuredSteps {
+public class RestAssuredApiSteps {
+    public static final String EMPTY_LINE = "";
+    public static final int RI_MINIMAL_AGE = 18;
+    public static final int AZ_MINIMAL_AGE = 16;
+    public static final int DRIVER_TRANING_AGE = 55;
+    public static final int DRIVER_TRAINING_EXPIRATION_YEARS = 2;
     RestContext restContext;
     RequestSpecification request = given();
     protected Logger log = LogManager.getLogger(this.getClass().getName());
     private String baseSoapXML = null; //TODO- SOAP
 
-    public RestAssuredSteps(RestContext restContext) {
+    public RestAssuredApiSteps(RestContext restContext) {
         this.restContext = restContext;
     }
 
@@ -180,9 +184,9 @@ public class RestAssuredSteps {
     @When("^a request body$")
     @Given("^a request body \"(.*)\"$")
     public void requestBody(String data) throws Exception {
-      /*  String body;
+        String body;
         if (restContext.getRestData().getContextType().toLowerCase().contains("xml")) {
-            if (data.substring(0, 2).equalsIgnoreCase("<<")) {
+          /*  if (data.substring(0, 2).equalsIgnoreCase("<<")) {
                 String[] str = data.replace("<<", "").replace(">>", "").split("\\.");
 
                 String testdatafile = str[0];
@@ -198,7 +202,8 @@ public class RestAssuredSteps {
                 body = APIHelper.createRequestXML(doc);
             } else {
                 body = data;
-            }
+            }*/
+            throw new RuntimeException("XML template");
         } else {
             if (!data.substring(0, 2).equalsIgnoreCase("<<")) {
                 data = patternSearchAndEvaluate(data);
@@ -210,7 +215,7 @@ public class RestAssuredSteps {
             }
         }
 
-        RestAssuredHelper.setBody(restContext.getRestData().getRequest(), body);*/
+        RestAssuredHelper.setBody(restContext.getRestData().getRequest(), body);
     }
 
     @Given("^Extract and Save \"(.*)\" from response$")
@@ -240,13 +245,13 @@ public class RestAssuredSteps {
     @Then("^the response code is (\\d+)$")
     public void verify_status_code(int code) throws NumberFormatException {
         RestAssuredHelper.checkStatus(restContext.getRestData(), code);
-        TestContext.getInstance().sa().assertAll();
+        getSa().assertAll();
     }
 
     @Then("^the response status is \"(.*)\"$")
     public void verify_status_message(String msg) throws NumberFormatException {
         RestAssuredHelper.checkStatus(restContext.getRestData(), msg);
-        TestContext.getInstance().sa().assertAll();
+        getSa().assertAll();
     }
 
     @Then("^the response time is less than (\\d+) milliseconds$")
@@ -300,6 +305,88 @@ public class RestAssuredSteps {
         } else {
             RestAssuredHelper.responseContains(table.asList(ResponseValidator.class), responseString);
         }
+    }
+
+    @And("^I'm parsing blueowl response$")
+    public void parsing() {
+        /*
+
+         */
+
+        JsonPath jsonPathEvaluator = restContext.getRestData().getResponse().jsonPath();
+        List<String> allAuto = jsonPathEvaluator.getList("auto");
+        for (int i = 0; i < allAuto.size(); i++) {
+
+            //TODO: check if it is empty with reading from file
+            //to check allcoverages
+            String formalName = jsonPathEvaluator.get("auto[" + i + "].coverageOptions.coverages.CompColl.formalName");
+            getSa().assertNotNull(formalName, "formalName is Null");
+            getSa().assertNotEquals(formalName, EMPTY_LINE);
+
+            Boolean supportExcludedDriver = jsonPathEvaluator.get("auto[" + i + "].configuration.supportExcludedDriver");
+            getSa().assertNotNull(supportExcludedDriver, "supportExcludedDriver is Null");
+            getSa().assertTrue(supportExcludedDriver, "supportExcludedDriver");
+
+            String jurisdiction = jsonPathEvaluator.get("jurisdiction");
+            Integer minimumDriverAge = jsonPathEvaluator.get("auto[" + i + "].configuration.minimumDriverAge");
+            getSa().assertNotNull(minimumDriverAge, "minimumDriverAge is Null");
+
+            switch (jurisdiction) {
+                case "US/RI":
+                    getSa().assertTrue(minimumDriverAge == RI_MINIMAL_AGE, "minimumDriverAge <> " + RI_MINIMAL_AGE + ", but " + minimumDriverAge + "|");
+                    break;
+                case "US/AZ":
+                    getSa().assertTrue(minimumDriverAge == AZ_MINIMAL_AGE, "minimumDriverAge <> " + AZ_MINIMAL_AGE + ", but " + minimumDriverAge + "|");
+                    break;
+            }
+
+
+            Boolean collectMindfulnessDiscount = jsonPathEvaluator.get("auto[" + i + "].configuration.collectMindfulnessDiscount");
+            getSa().assertNotNull(collectMindfulnessDiscount);
+            getSa().assertTrue(collectMindfulnessDiscount, "supportExcludedDriver: ");
+
+            Boolean collectAccidentPreventionCourse = jsonPathEvaluator.get("auto[" + i + "].configuration.collectAccidentPreventionCourse");
+            getSa().assertNotNull(collectAccidentPreventionCourse, " collectAccidentPreventionCourse in Null");
+
+            if (collectAccidentPreventionCourse) {
+
+                Integer driverTraining = jsonPathEvaluator.get("auto[" + i + "].configuration.driverTraining");
+                getSa().assertNotNull(driverTraining);
+                getSa().assertTrue(driverTraining == DRIVER_TRANING_AGE, "minimumDriverAge <> " + DRIVER_TRANING_AGE + ", but " + minimumDriverAge + "|");
+
+                Integer driverTrainingExpirationYears = jsonPathEvaluator.get("auto[" + i + "].configuration.driverTrainingExpirationYears");
+
+                getSa().assertNotNull(driverTrainingExpirationYears);
+                getSa().assertTrue(driverTrainingExpirationYears == DRIVER_TRAINING_EXPIRATION_YEARS, "minimumDriverAge <> " + DRIVER_TRAINING_EXPIRATION_YEARS + ", but " + minimumDriverAge + "|");
+
+            }
+            List<String> insuredRequestCancellationReasonsAuto = jsonPathEvaluator.getList("auto[" + i + "].configuration.insuredRequestCancellationReasons");
+            getSa().assertNotNull(insuredRequestCancellationReasonsAuto);
+            getSa().assertTrue(insuredRequestCancellationReasonsAuto.size() > 0, "insuredRequestCancellationReasonsAuto is empty");
+
+        }
+
+        List<String> allRenters = jsonPathEvaluator.getList("renters");
+        for (int j = 0; j < allRenters.size(); j++) {
+            //to check allcoverages
+            List<String> insuredRequestCancellationReasonsRenters = jsonPathEvaluator.getList("renters[" + j + "].configuration.insuredRequestCancellationReasons");
+            getSa().assertNotNull(insuredRequestCancellationReasonsRenters);
+            getSa().assertTrue(insuredRequestCancellationReasonsRenters.size() > 0, "insuredRequestCancellationReasonsRenters is empty");
+        }
+        getSa().assertAll("Hello world");
+
+
+        //insuredRequestCancellationReasons
+        // /renters / 0 / configuration / insuredRequestCancellationReasons
+
+
+        //RestAssuredHelper.responseContains(asList(ResponseValidator.class), responseString);
+
+
+    }
+
+    private SoftAssertWithNotifications getSa() {
+        return TestContext.getInstance().sa();
     }
 
 

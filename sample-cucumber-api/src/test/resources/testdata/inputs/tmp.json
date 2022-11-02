@@ -1,0 +1,981 @@
+{
+  "jurisdiction": "US/AZ",
+  "localtime": "2022-07-15T16:42:50.682567967-06:00",
+  "ianaTimezoneId": "America/Denver",
+  "auto": [
+    {
+      "effectiveDate": "2022-04-08",
+      "configuration": {
+        "insuredRequestCancellationReasons": [
+          "Due to poor customer service",
+          "Due to poor claims service",
+          "Due to high premium",
+          "Replacement of insurance carrier",
+          "Sold vehicle",
+          "No longer driving",
+          "Moved out of state",
+          "Insured request - other"
+        ],
+        "companyInitiatedCancellationReasons": [
+          "Does not meet the new business eligibility guidelines",
+          "Failure to complete an underwriting review",
+          "MVR activity (Auto Only)",
+          "Loss frequency",
+          "Fraud or misrepresentation",
+          "Violations of terms and conditions of the policy",
+          "Company-initiated - other"
+        ],
+        "knockoutQuestions": {
+          "allDriversLicensed": {
+            "presentation": "switch",
+            "question": "Do you and all drivers have active U.S. driver’s licenses?\n",
+            "sorry": "Sorry, you are not eligible for a policy with HiRoad at this time.\n",
+            "choices": {
+              "no": {
+                "label": "No",
+                "behavior": "sorry",
+                "ordinal": 1
+              },
+              "yes": {
+                "label": "Yes",
+                "behavior": "proceed",
+                "ordinal": 2
+              }
+            }
+          },
+          "gu1338": {
+            "presentation": "switch",
+            "question": "Have you or any driver had a major driving violation in\nthe past 3 years, or require a financial responsibility\nfiling, such as an SR-22?\n",
+            "sorry": "Sorry, you are not eligible for a policy with HiRoad at this time.\n",
+            "choices": {
+              "no": {
+                "label": "No",
+                "behavior": "proceed",
+                "ordinal": 2
+              },
+              "yes": {
+                "label": "Yes",
+                "behavior": "sorry",
+                "ordinal": 1
+              }
+            }
+          }
+        },
+        "maximumFutureStartDays": 14,
+        "driverTraining": 55,
+        "vehicleRatingAge": 31,
+        "vehicleRatingYear": 1992,
+        "singleGaragingAddress": true,
+        "maximumDriverAge": 110,
+        "minimumDriverAge": 16,
+        "collectVehicleAntiTheft": false,
+        "collectAccidentPreventionCourse": false,
+        "collectMindfulnessDiscount": true,
+        "supportExcludedDriver": true,
+        "useMVRInPricing": true,
+        "driverTrainingExpirationYears": 0
+      },
+      "coverageOptions": {
+        "coverageGroups": {
+          "Coll": {
+            "name": "Damage to my car",
+            "shortName": "Damage to my car",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesColl",
+            "ordinal": 6
+          },
+          "Comp": {
+            "name": "Damage to my car",
+            "shortName": "Damage to my car",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesComp",
+            "ordinal": 5
+          },
+          "CompColl": {
+            "name": "Damage to my car",
+            "shortName": "Damage to my car",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToMyCar.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesCompColl",
+            "ordinal": 4
+          },
+          "Liability": {
+            "name": "Damage to others",
+            "shortName": "Damage to others",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToOthers.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToOthers.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToOthers.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/DamageToOthers.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesLiability",
+            "ordinal": 1
+          },
+          "MEDPM": {
+            "name": "Injuries to me and my passengers",
+            "shortName": "Injuries to me & my passengers",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/InjuriesToMe.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/InjuriesToMe.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/InjuriesToMe.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/InjuriesToMe.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesMEDPM",
+            "ordinal": 2
+          },
+          "PIP": {
+            "name": "Injuries to me and my passengers",
+            "shortName": "Injuries to me and my passengers",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/PersonalInjuryProtection.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/PersonalInjuryProtection.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/PersonalInjuryProtection.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/PersonalInjuryProtection.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesPIP",
+            "ordinal": 9
+          },
+          "RAC": {
+            "name": "Roadside assistance",
+            "shortName": "Roadside assistance",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/RoadsideAssist.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/RoadsideAssist.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/RoadsideAssist.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/RoadsideAssist.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesRAC",
+            "ordinal": 7
+          },
+          "RREIM": {
+            "name": "Rental reimbursement",
+            "shortName": "Rental reimbursement",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/RentalReimburse.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/RentalReimburse.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/RentalReimburse.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/RentalReimburse.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesRREIM",
+            "ordinal": 8
+          },
+          "UM": {
+            "name": "Protection from uninsured or underinsured drivers",
+            "shortName": "Protection from uninsured drivers",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/UninsuredMotoristInjury.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/UninsuredMotoristInjury.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/UninsuredMotoristInjury.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/UninsuredMotoristInjury.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationAutoCoveragesUM",
+            "ordinal": 3
+          }
+        },
+        "rules": [
+          {
+            "type": "showWarningWhenMore",
+            "matchType": "ALessThanValue",
+            "id": "showWarningForLLV",
+            "description": "Show warning when leased/loaned vehicle Comp/Coll is too low",
+            "a": {
+              "coverage": "CompColl",
+              "part": "coll",
+              "value": "500",
+              "parameterValue": 500,
+              "riskItemType": "vehicles",
+              "riskItemAttributes": {
+                "vehicleOwned": false
+              }
+            },
+            "message": "If you lease or have a loan on your car, know that most financial institutions require\nmaximum $500 deductible coverage.\n",
+            "WaiverOnPolicyChange": false,
+            "blocking": false
+          },
+          {
+            "type": "minimumRequired",
+            "matchType": "AGreaterThanOrEqualValue",
+            "id": "LLvehicleRequiresCC",
+            "description": "Leased/Loaned vehicles require Comp/Coll coverage",
+            "a": {
+              "coverage": "CompColl",
+              "part": "coll",
+              "value": "1",
+              "parameterValue": 1,
+              "riskItemType": "vehicles",
+              "riskItemAttributes": {
+                "vehicleOwned": false
+              }
+            },
+            "message": "If you lease or have a loan on your car, you may not decline Comp/Coll coverage.\n",
+            "WaiverOnPolicyChange": false,
+            "blocking": true
+          },
+          {
+            "type": "mustNotExceed",
+            "matchType": "ALessThanOrEqualToB",
+            "id": "MNEUMBIP",
+            "description": "Uninsured Motorist limit per person must not exceed Liability limit per person",
+            "a": {
+              "coverage": "UMBI",
+              "part": "person"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "personBI"
+            },
+            "message": "Please choose a new selection to continue.",
+            "WaiverOnPolicyChange": false,
+            "blocking": true
+          },
+          {
+            "type": "mustNotExceed",
+            "matchType": "ALessThanOrEqualToB",
+            "id": "MNEUMBIA",
+            "description": "Uninsured Motorist limit per accident must not exceed Liability limit per accident",
+            "a": {
+              "coverage": "UMBI",
+              "part": "accident"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "accidentBI"
+            },
+            "message": "Please choose a new selection to continue.",
+            "WaiverOnPolicyChange": false,
+            "blocking": true
+          },
+          {
+            "type": "mustNotExceed",
+            "matchType": "ALessThanOrEqualToB",
+            "id": "MNEUIMBIP",
+            "description": "Underinsured Motorist limit per person must not exceed Liability limit per person",
+            "a": {
+              "coverage": "UIMBI",
+              "part": "personUIMBI"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "personBI"
+            },
+            "message": "Please choose a new selection to continue.",
+            "WaiverOnPolicyChange": false,
+            "blocking": true
+          },
+          {
+            "type": "mustNotExceed",
+            "matchType": "ALessThanOrEqualToB",
+            "id": "MNEUMBIA",
+            "description": "Underinsured Motorist limit per accident must not exceed Liability limit per accident",
+            "a": {
+              "coverage": "UIMBI",
+              "part": "accidentUIMBI"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "accidentBI"
+            },
+            "message": "Please choose a new selection to continue.",
+            "WaiverOnPolicyChange": false,
+            "blocking": true
+          },
+          {
+            "type": "requires",
+            "matchType": "ADeclinedOrBIncluded",
+            "id": "RRREIMCC",
+            "description": "Car Rental Reimbursement is only available in combination with Comprehensive & Collision",
+            "a": {
+              "coverage": "RREIM",
+              "part": "perDayRREIM",
+              "riskItemType": "vehicles"
+            },
+            "b": {
+              "coverage": "CompColl",
+              "part": "coll",
+              "riskItemType": "vehicles"
+            },
+            "message": "Rental reimbursement may only be purchased when you also select \"Damage to my car\"\n",
+            "WaiverOnPolicyChange": false,
+            "blocking": true
+          },
+          {
+            "type": "signatureRequiredWhenLess",
+            "matchType": "AGreaterThanOrEqualToB",
+            "id": "SRWLUMBIP",
+            "description": "Signature Required when Uninsured Motorist per-person limit is less than Liability per-person limit",
+            "a": {
+              "coverage": "UMBI",
+              "part": "person"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "personBI"
+            },
+            "message": "If you are sure you'd like lower protection amounts for 'Protection from uninsured drivers' than you've selected for 'Damage to others,' then we're required to have you agree to a waiver before purchase.\n",
+            "waiver": "waiverUM",
+            "WaiverOnPolicyChange": false,
+            "blocking": false
+          },
+          {
+            "type": "signatureRequiredWhenLess",
+            "matchType": "AGreaterThanOrEqualToB",
+            "id": "SRWLUMBIA",
+            "description": "Signature Required when Uninsured Motorist per-person limit is less than Liability per-person limit",
+            "a": {
+              "coverage": "UMBI",
+              "part": "accident"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "accidentBI"
+            },
+            "message": "If you are sure you'd like lower protection amounts for 'Protection from uninsured drivers' than you've selected for 'Damage to others,' then we're required to have you agree to a waiver before purchase.\n",
+            "waiver": "waiverUM",
+            "WaiverOnPolicyChange": false,
+            "blocking": false
+          },
+          {
+            "type": "signatureRequiredWhenLess",
+            "matchType": "AGreaterThanOrEqualToB",
+            "id": "MODUIMBILA",
+            "description": "Signature Required when Underinsured Motorist limit is less than Liability per-person limit",
+            "a": {
+              "coverage": "UIMBI",
+              "part": "personUIMBI"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "personBI"
+            },
+            "message": "If you are sure you'd like lower protection amounts for 'Protection from underinsured drivers' than you've selected for 'Damage to others,' then we're required to have you agree to a waiver before purchase.\n",
+            "waiver": "waiverUM",
+            "WaiverOnPolicyChange": false,
+            "blocking": false
+          },
+          {
+            "type": "signatureRequiredWhenLess",
+            "matchType": "AGreaterThanOrEqualToB",
+            "id": "MODUIMBILB",
+            "description": "Signature Required when Underinsured Motorist limit is less than Liability per-person limit",
+            "a": {
+              "coverage": "UIMBI",
+              "part": "accidentUIMBI"
+            },
+            "b": {
+              "coverage": "Liability",
+              "part": "accidentBI"
+            },
+            "message": "If you are sure you'd like lower protection amounts for 'Protection from underinsured drivers' than you've selected for 'Damage to others,' then we're required to have you agree to a waiver before purchase.\n",
+            "waiver": "waiverUM",
+            "WaiverOnPolicyChange": false,
+            "blocking": false
+          },
+          {
+            "type": "signatureRequiredWhenCombinationDeclined",
+            "matchType": "AIncludedOrBIncluded",
+            "id": "SRWNCCAUIMBID",
+            "description": "Signature required when declining UIMBI if any vehicle has Comp/Coll declined",
+            "a": {
+              "coverage": "CompColl",
+              "part": "coll",
+              "riskItemType": "vehicles"
+            },
+            "b": {
+              "coverage": "UIMBI",
+              "part": "personUIMBI"
+            },
+            "message": "Comprehensive and Collision Coverages\n",
+            "waiver": "waiverUM",
+            "WaiverOnPolicyChange": false,
+            "blocking": false
+          },
+          {
+            "type": "showWarningWhenDeclined",
+            "matchType": "AGreaterThanValue",
+            "id": "SWWDUMUIMBI",
+            "description": "Show warning when coverage is declined",
+            "a": {
+              "coverage": "UIMBI",
+              "part": "personUIMBI",
+              "value": "0",
+              "parameterValue": 0
+            },
+            "message": "Are you sure you don't want protection for your car if you're hit by an uninsured driver?\n",
+            "WaiverOnPolicyChange": false,
+            "blocking": false
+          },
+          {
+            "type": "signatureRequiredWhenDeclined",
+            "matchType": "AGreaterThanValue",
+            "id": "DriverExcluded",
+            "description": "Require signature when a driver is excluded",
+            "a": {
+              "driver": true,
+              "coverage": "notExcluded",
+              "part": "notExcluded",
+              "value": "0",
+              "parameterValue": 0
+            },
+            "message": "If there is an excluded driver in your policy, then we're required to have you agree to a waiver before purchase.\n",
+            "waiver": "driverExclusionAgreement",
+            "WaiverOnPolicyChange": true,
+            "blocking": false
+          }
+        ],
+        "coverages": {
+          "CompColl": {
+            "formalName": "Comprehensive and Collision Coverages",
+            "selectorLabel": "Includes:",
+            "description": "<p>\n<strong>How this coverage works</strong>\n</p><p>\nComprehensive coverage pays for a vehicle that&#39;s stolen or damaged by\ncauses other than collision or upset. Some examples include damage caused\nby: fire, wind, hail, earthquake, theft, vandalism, or hitting animals\nin the road. It will also pay for substitute transportation expenses up\nto $25 a day ($750 maximum) if your car is stolen. Payments will be made\nbeginning when you tell us of the theft.\n</p><p>\nCollision coverage pays for a covered vehicle that is damaged by collision\nwith another object or by the overturning of the vehicle.\n</p><p>\nA deductible is required for these coverages and represents the amount\nyou pay before insurance covers any remaining costs. Please note that\nif you lease or have a lien on your covered vehicle, your lessor or\nlienholder may require you to buy these coverages.\n</p><p>\nIf no glass deductible is offered in your state then it applies only to\nComprehensive coverage. Please review the policy contract for coverage\ndetails in your state.\n</p><p>\n<strong>How high should my deductible be?</strong>\n</p><p>\nHigher deductibles lower your premium, but increase the amount you&#39;ll\nhave to pay out of your own pocket for accidental damage to your car. Ask\nyourself how much risk you&#39;re willing to take to save money on premiums\nand calculate the maximum amount you can pay out of pocket.\n</p><p>\n<strong>Coverage in action</strong>\n</p><p>\nLet&#39;s say a tree falls on Blake&#39;s car during a thunderstorm. His car\nhas major damage, but thankfully, he&#39;s not injured.\n</p><p>\nIt&#39;s not Blake&#39;s fault, but these things happen. The damage to his\ncar will cost $1,500 to repair and his deductible is $500. Blake&#39;s\nComprehensive coverage covers the remaining $1,000 for the repairs.\n</p><p>\nor\n</p><p>\nIt&#39;s just not Aaron&#39;s day. On the way to work, his car went off the\nroad striking a tree. His car has major damage, but fortunately, he wasn&#39;t injured.\n</p><p>\nThe damage to his car will cost $4000 to repair and his deductible is $500.\nAaron&#39;s Collision coverage covers the remaining $3,500 for the repairs.\n</p>\n",
+            "shortDescription": "Comprehensive and Collision Coverages",
+            "presentation": "drop-down",
+            "ordinal": 5,
+            "group": "CompColl"
+          },
+          "Liability": {
+            "formalName": "Bodily Injury and Property Damage Liability Coverage",
+            "selectorLabel": "Covers up to:",
+            "description": "<p>\n<strong>How this coverage works</strong>\n</p><p>\nBodily Injury and Property Damage Liability coverages pay for damages\nto others if you are legally responsible. If you are sued, it also pays for\nyour defense and court costs.\n</p><p>\nMedical expenses, pain and suffering, and lost wages are some examples\nof bodily injury damages. Property damage includes damage to property\nand its loss of use.\n</p><p>\n<strong>How high should my limits be?</strong>\n</p><p>\nNobody can tell you the most you will have to pay if you cause an auto\naccident. Consider your ability to pay any damages that exceed your policy\nlimits with your own money. The higher your limits are, the more protection\nwe will be able to provide for you.\n</p><p>\n<strong>Coverage in action</strong>\n</p><p>\nLet&#39;s say Steve&#39;s car collides with a stopped car at an intersection. The\ndriver and passenger in the car he hit are injured, and their luxury\ncar is totaled.\n</p>\n<p>\nIf Steve is legally responsible—or liable—for the accident, Bodily Injury\nLiability coverage may pay for medical expenses up to his limits\nper person and per accident. If Steve&#39;s Property Damage limit is $50,000,\nhe may be responsible for paying the balance on their $70,000 car. If\nthe other driver sues him, it pays for his defense and court costs.\n</p>\n",
+            "shortDescription": "Pays for injuries to other people and damage to their property when you are at fault.",
+            "alternativesKey": "Each person / Each accident / Property",
+            "presentation": "drop-down",
+            "ordinal": 1,
+            "group": "Liability"
+          },
+          "MEDPM": {
+            "formalName": "Medical Payments Coverage",
+            "selectorLabel": "Covers up to:",
+            "description": "<p>\n<strong>How this coverage works</strong>\n</p><p>\nMedical Payments coverage pays up to the limit you select per person\nfor medical and funeral expenses, for bodily injury sustained by a\ncovered person in an auto accident. The bodily injury must be initially\ntreated within one year after the accident. The medical expenses must\nbe reasonable and necessary, and the medical expenses must be provided\nwithin one year immediately following the date of the accident.\n</p><p>\nThe most we will pay for funeral expenses is the lower of your limit or $3000.\n</p><p>\n<strong>How high should my limits be?</strong>\n</p><p>\nNobody can tell you the most you will have to pay if you are\ninjured in an auto accident. Consider your personal health insurance\ncoverage and your ability to pay for medical treatment. The higher your\nlimits are, the more protection we will be able to provide for you.\n</p><p>\n<strong>Coverage in action</strong>\n</p><p>\nWhile Sabrina is driving in a snowstorm, she slides off the road and\nhits a tree. The impact injures her and an ambulance takes her to the\nhospital for treatment.\n</p>\n<p>\nSabrina&#39;s emergency medical treatment costs $2,500, but her health\ninsurance deductible requires her to pay $1,500 out of pocket. Sabrina&#39;s\nMedical Payments coverage will help her pay her deductible and any other\nreasonable medical expenses related to her accident injuries that are\nnot covered by her health insurance.\n</p>\n",
+            "shortDescription": "Helps pay for medical expenses if you or your passengers are injured in an accident.",
+            "alternativesKey": "Each person",
+            "presentation": "drop-down",
+            "ordinal": 2,
+            "group": "MEDPM"
+          },
+          "RAC": {
+            "formalName": "Emergency Road Service Coverage",
+            "selectorLabel": "Would you like to add this coverage?",
+            "description": "<p>\n<strong>How this coverage works</strong>\n</p><p>\nEmergency Road Service coverage pays the fair cost for the following\nemergency services for a covered vehicle:\n</p><p>\n• Mechanical labor for up to one hour at the place of breakdown.<br/>\n• Towing to the nearest place where repairs can be made.<br/>\n• Towing the vehicle out if it is stuck on or next to a public road.<br/>\n• Delivery of gas, oil, battery, or change of tire, but not the cost of such items.<br/>\n• Locksmith labor for up to one hour to unlock a covered car if its key is lost,\nstolen, or locked inside the vehicle.<br/>\n</p><p>\n<strong>Who do I call when I need help?</strong>\n</p><p>\nYou may call HiRoad&#39;s Emergency Road Service or any service provider in\nthe area. This coverage lets you choose who comes to your aid.\n</p><p>\n<strong>Coverage in action</strong>\n</p><p>\nEric&#39;s car breaks down on the side of the road in an unfamiliar area,\nleaving him stranded on the side of the road. Unsure who to call, Eric contacts\nHiRoad Emergency Road Service through the HiRoad app and they dispatch assistance\nto his location.\n</p><p>\nHis Roadside Assistance coverage pays for his towing or minor mechanical repair so he can get\nback on the road.\n</p>\n",
+            "shortDescription": "Helps pay for the cost of emergency services.",
+            "presentation": "switch",
+            "ordinal": 7,
+            "group": "RAC"
+          },
+          "RREIM": {
+            "formalName": "Car Rental and Travel Expenses Coverage",
+            "selectorLabel": "Would you like to add this coverage?",
+            "description": "<p>\n<strong>How this coverage works</strong>\n</p><p>\nCar Rental and Travel Expenses coverage pays up to $40 per day ($1,200 max\nper occurrence) for you to rent a car or pay for alternative sources of\ntransportation such as a TNCs like Uber or Lyft, train, taxi or bus. You can\nbe reimbursed up to the daily limit when your car is not drivable due\nto a loss that would be payable under Comprehensive or Collision Coverage.\n</p><p>\nIt also pays up to $500 total for the following incurred expenses for\nall persons when your car is not drivable as a result of a loss that\noccurs more than 50 miles from home, including: meals, lodging, and\ntransportation home or on to your destination, and the return trip to\npick up your car.\n</p><p>\n<strong>Coverage in action</strong>\n</p><p>\nJason&#39;s car is in the shop after a collision, leaving him without a way\nto get to work or run errands until the repairs are complete.\n</p><p>\nRental reimbursement pays for car rental expense while his car is being\nrepaired and Jason is relieved to have less interruption to his routine.\n</p><p>\nor\n</p><p>\nRental reimbursement covers Jason&#39;s Uber rides while his car is being repaired.\nThis helps keep his normal schedule as much as possible.\n</p>\n",
+            "shortDescription": "Helps pay car rental and travel expenses when your vehicle is damaged.",
+            "alternativesKey": "Per Day / Per Occurrence",
+            "presentation": "drop-down",
+            "ordinal": 6,
+            "group": "RREIM"
+          },
+          "UIMBI": {
+            "formalName": "Underinsured Motorist - Bodily Injury Coverage",
+            "selectorLabel": "Covers up to:",
+            "description": "<p>\n<strong>How these coverages work</strong>\n</p><p>\nUninsured or Underinsured Motorist Bodily Injury coverages pay for damages\nwhen you are involved in a car accident caused by another person who does not\nhave enough or any liability insurance. Medical expenses and lost wages are\nsome examples of bodily injury damages.\n</p><p>\n<strong>Coverage in action</strong>\n</p><p>\nAn uninsured driver runs a red light and hits the side of Karen&#39;s car. She\nand her passenger end up in the hospital for several days.\n</p><p>\nBecause she was injured by someone driving without any liability, Karen&#39;s\nUninsured Motorist Bodily Injury coverage helps pay for her medical expenses.\nAdditionally, Karen and her passenger&#39;s lost wages or pain and suffering may be covered.\n</p><p>\nor\n</p><p>\nAn underinsured driver is distracted and rear ends Aaron’s car at a stop sign.\nHe is injured and requires treatment for several months to recover fully.\n</p><p>\nBecause he was injured by someone driving with insufficient liability limits,\nAaron&#39;s Underinsured Motorist Bodily Injury coverage helps pay for any of his\nadditional medical expenses that are not covered by the at-fault driver’s insurance.\nAdditionally, Aaron&#39;s lost wages or pain and suffering may be covered.\n</p><p>\n* RI, NV customers: Underinsured Motorist - Bodily Injury coverage is included as\npart of Uninsured Motorist - Bodily Injury coverage.<br/>\nNote: Please review the policy contract for coverage details in your state.\n</p>\n",
+            "shortDescription": "Underinsured Motorist - Bodily Injury Coverage",
+            "alternativesKey": "Each person / Each accident",
+            "presentation": "drop-down",
+            "ordinal": 4,
+            "group": "UM"
+          },
+          "UMBI": {
+            "formalName": "Uninsured Motorist - Bodily Injury Coverage",
+            "selectorLabel": "Covers up to:",
+            "description": "<p>\n<strong>How these coverages work</strong>\n</p><p>\nUninsured or Underinsured Motorist Bodily Injury coverages pay for damages\nwhen you are involved in a car accident caused by another person who does not\nhave enough or any liability insurance. Medical expenses and lost wages are\nsome examples of bodily injury damages.\n</p><p>\n<strong>Coverage in action</strong>\n</p><p>\nAn uninsured driver runs a red light and hits the side of Karen&#39;s car. She\nand her passenger end up in the hospital for several days.\n</p><p>\nBecause she was injured by someone driving without any liability, Karen&#39;s\nUninsured Motorist Bodily Injury coverage helps pay for her medical expenses.\nAdditionally, Karen and her passenger&#39;s lost wages or pain and suffering may be covered.\n</p><p>\nor\n</p><p>\nAn underinsured driver is distracted and rear ends Aaron’s car at a stop sign.\nHe is injured and requires treatment for several months to recover fully.\n</p><p>\nBecause he was injured by someone driving with insufficient liability limits,\nAaron&#39;s Underinsured Motorist Bodily Injury coverage helps pay for any of his\nadditional medical expenses that are not covered by the at-fault driver’s insurance.\nAdditionally, Aaron&#39;s lost wages or pain and suffering may be covered.\n</p><p>\n* RI, NV customers: Underinsured Motorist - Bodily Injury coverage is included as\npart of Uninsured Motorist - Bodily Injury coverage.<br/>\nNote: Please review the policy contract for coverage details in your state.\n</p>\n",
+            "shortDescription": "Helps pay for injuries to you when the other driver is at fault and doesn't have sufficient insurance.",
+            "alternativesKey": "Each person / Each accident",
+            "presentation": "drop-down",
+            "ordinal": 3,
+            "group": "UM"
+          }
+        }
+      }
+    }
+  ],
+  "renters": [
+    {
+      "effectiveDate": "2022-04-08",
+      "configuration": {
+        "insuredRequestCancellationReasons": [
+          "Due to poor customer service",
+          "Due to poor claims service",
+          "Due to high premium",
+          "Replacement of insurance carrier",
+          "Moved to a new residence",
+          "Moved out of state",
+          "Insured request - other"
+        ],
+        "companyInitiatedCancellationReasons": [
+          "Does not meet the new business eligibility guidelines",
+          "Failure to complete an underwriting review",
+          "MVR activity (Auto Only)",
+          "Loss frequency",
+          "Fraud or misrepresentation",
+          "Violations of terms and conditions of the policy",
+          "Company-initiated - other"
+        ],
+        "maximumFutureStartDays": 14,
+        "dwellingFeatureTypes": {
+          "alarm": {
+            "name": "Alarm system",
+            "shortDescription": "Does your place have an alarm that calls a security service?",
+            "presentation": "switch",
+            "ordinal": 0,
+            "alternatives": {
+              "no": {
+                "name": "No",
+                "ordinal": 1
+              },
+              "yes": {
+                "name": "Yes",
+                "ordinal": 0
+              }
+            }
+          },
+          "sprinkler": {
+            "name": "Sprinkler protection",
+            "shortDescription": "Does your place have a sprinkler for fires?",
+            "presentation": "switch",
+            "ordinal": 0,
+            "alternatives": {
+              "no": {
+                "name": "No",
+                "ordinal": 1
+              },
+              "yes": {
+                "name": "Yes",
+                "ordinal": 0
+              }
+            }
+          }
+        }
+      },
+      "coverageOptions": {
+        "coverageGroups": {
+          "liability": {
+            "name": "Protect your guests\n& your wallet\n",
+            "shortName": "Protect your guests\n& your wallet\n",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectGuestsAndWallet.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectGuestsAndWallet.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectGuestsAndWallet.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectGuestsAndWallet.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationLiabilityGroup",
+            "ordinal": 3
+          },
+          "misc": {
+            "name": "Protect yourself from ...",
+            "shortName": "Protect yourself from ...",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectYourselfFrom.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectYourselfFrom.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectYourselfFrom.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectYourselfFrom.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationMiscGroup",
+            "ordinal": 4
+          },
+          "property": {
+            "name": "Protect your stuff",
+            "shortName": "Protect your stuff",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectMyStuff.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectMyStuff.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectMyStuff.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectMyStuff.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationPropertyGroup",
+            "ordinal": 1
+          },
+          "protect": {
+            "name": "Protect yourself & your family",
+            "shortName": "Protect yourself & your family",
+            "imageURLs": [
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectSelfFamily.4x.jpg",
+                "width": 480,
+                "height": 480,
+                "scale": "4x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectSelfFamily.3x.jpg",
+                "width": 360,
+                "height": 360,
+                "scale": "3x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectSelfFamily.2x.jpg",
+                "width": 240,
+                "height": 240,
+                "scale": "2x"
+              },
+              {
+                "url": "https://images.hiroad.com/2.0/ProtectSelfFamily.1x.jpg",
+                "width": 120,
+                "height": 120,
+                "scale": "1x"
+              }
+            ],
+            "illustration": "illustrationLossOfUse",
+            "ordinal": 2
+          }
+        },
+        "rules": [],
+        "coverages": {
+          "DLossOfUse": {
+            "formalName": "Loss of Use",
+            "selectorLabel": "",
+            "description": "If you can’t live in your place after a loss, this pays for lodging and living expenses until you can move back in.",
+            "shortDescription": "If you can’t live in your place after a loss, this pays for lodging and living expenses until you can move back in.",
+            "alternativesKey": "Limit",
+            "presentation": "forced",
+            "ordinal": 3,
+            "group": "protect",
+            "forcedFrom": "PersonalPropertyLimit"
+          },
+          "EPersonalLiability": {
+            "formalName": "Liability Coverage",
+            "selectorLabel": "",
+            "description": "<p>\nIf there&#39;s an accident in your home, you could be held\nlegally responsible.\n</p><p>\nThis coverage pays for your legal liability (subject to\npolicy limits) for injuries or property damage caused by\nan applicable event. In addition, it may provide for the\npayment of your defense against these claims or suits.\n</p><p>\nIf you break or damage someone else&#39;s property, your policy\ncan help pay to replace it.\n</p><p>\nScenario: it&#39;s been a tough week at work, and looking\nto unwind you begin filling the bath to settle in and\nrelax. Right then Elle texts you to see if you want to grab\na beer, so you head out. You get home to find a furious\ndownstairs neighbor — you forgot to turn off the water,\nand now your neighbor&#39;s belongings are waterlogged and\nruined.\n</p><p>\nScenario: today your rescue pup, Maverick, was chasing a\nball in the park when a young boy got excited and tried to\ntake it from him to throw it again. Before you knew it,\nMaverick grabbed the ball from the boy and accidentally\nnipped his fingers. There&#39;s not even a scratch, but the\nboy&#39;s parents are threatening to sue you!\n</p><p>\nIn these situations, Personal Liability can help pay for\nthe damages you&#39;re legally responsible for, or help defend\nyou against any legal action.\n</p>\n",
+            "shortDescription": "If your guest gets hurt at your place, or your dog bites someone and you get sued,\nthis is what pays legal and medical costs.\n",
+            "alternativesKey": "Per occurrence",
+            "presentation": "drop-down",
+            "ordinal": 5,
+            "group": "liability"
+          },
+          "Earthquake": {
+            "formalName": "Earthquake Damage",
+            "selectorLabel": "",
+            "description": "Protect your stuff during that shake, rattle and roll. Heads up, a deductible applies to this coverage.",
+            "shortDescription": "Protect your stuff during that shake, rattle and roll. Heads up, a deductible applies to this coverage.",
+            "presentation": "switch",
+            "ordinal": 6,
+            "group": "misc"
+          },
+          "FMedicalPayments": {
+            "formalName": "Medical Payments Coverage",
+            "selectorLabel": "",
+            "description": "If someone gets hurt on my property, this helps pay their medical bills.",
+            "shortDescription": "If someone gets hurt on my property, this helps pay their medical bills.",
+            "alternativesKey": "For each person",
+            "presentation": "drop-down",
+            "ordinal": 4,
+            "group": "liability"
+          },
+          "IdentityTheft": {
+            "formalName": "Cyber Event, Identity Restoration, and Fraud Loss",
+            "selectorLabel": "",
+            "description": "Protect the real you (and your credit!) when someone else pretends to be you.",
+            "shortDescription": "Protect the real you (and your credit!) when someone else pretends to be you.",
+            "presentation": "switch",
+            "ordinal": 9,
+            "group": "misc"
+          },
+          "JF": {
+            "formalName": "Jewelry Theft And Loss",
+            "selectorLabel": "",
+            "description": "<p>\nCovers loss by theft of jewelry, watches, precious and\nsemi-precious stones, and fur or fur-trimmed garments. The\ndefault renters policy limits theft coverage for these items\nto $1,000; with this optional coverage, you can purchase\nhigher limits of $2,500, $5,000, or $10,000. Increasing\nyour coverage to a higher limit will also provide coverage\nfor accidental physical loss.\n</p><p>\nWhile honeymooning on Maui, Ryan and Hayley are enjoying\nsurfing lessons. Hayley&#39;s enjoyment turns to panic when\nshe realizes her new wedding ring is no longer on her\nfinger. Adding Jewelry and Furs optional coverage adds\nprotection for accidental losses like this.\n</p>\n",
+            "shortDescription": "When you have cha-ching invested in your bling, protect it.",
+            "presentation": "drop-down",
+            "ordinal": 8,
+            "group": "misc"
+          },
+          "PersonalPropertyDeductible": {
+            "formalName": "Deductible",
+            "selectorLabel": "",
+            "description": "What you pay upfront before insurance kicks in.",
+            "shortDescription": "What you pay upfront before insurance kicks in.",
+            "alternativesKey": "Deductible",
+            "presentation": "drop-down",
+            "ordinal": 2,
+            "group": "property"
+          },
+          "PersonalPropertyLimit": {
+            "formalName": "Personal Property",
+            "selectorLabel": "",
+            "description": "<p>\nCoverage for your personal belongings. Personal property\ncoverage protects your belongings anywhere in the world.\n</p><p>\nScenario 1: you&#39;re embracing mindful living, and have\ntaken up biking to work. You&#39;re feeling good about your\nincreased fitness and decreased carbon footprint, until you\ncome out of work on Monday to findyour bike&#39;s been stolen.\n</p><p>\nScenario 2: you&#39;ve waited a long time for the weekend\ntrip to New York with your friends. But while you&#39;re away,\nyour apartment is broken into and your laptop, sunglasses,\nand leather jacket are gone!\n</p><p>\nIn both of these situations, Personal Property coverage\nwill help you pay to replace these items (subject to your\ndeductible and policy limits).\n</p>\n",
+            "shortDescription": "Pays for your stuff no matter where it is when stolen or damaged.",
+            "alternativesKey": "Limit",
+            "presentation": "drop-down-with-plus-minus",
+            "highlightSubset": [
+              "10000",
+              "20000",
+              "40000",
+              "70000",
+              "100000"
+            ],
+            "ordinal": 1,
+            "group": "property"
+          },
+          "WaterBackupOfSewerAndDrain": {
+            "formalName": "Sewer Drain Backup",
+            "selectorLabel": "",
+            "description": "<p>\nProvides coverage for damage caused by water which backs\nup through sewers or drains, including sump pumps, sump\npump wells, or any type of system designed to remove\nsurface water. (Coverage is subject to limits selected;\nwill be an additional amount on your bill.)\n</p><p>\nA backed-up sewer can make a real mess in your home,\ncausing damage to your things that are exposed to the water\nand sewage backup. This coverage can help you repair or\nreplace damaged items.\n</p>\n",
+            "shortDescription": "Protect your stuff and your space when what should stay down comes up.",
+            "presentation": "switch",
+            "ordinal": 7,
+            "group": "misc"
+          }
+        }
+      }
+    }
+  ]
+}

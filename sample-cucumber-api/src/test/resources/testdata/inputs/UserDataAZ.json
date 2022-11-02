@@ -1,0 +1,11 @@
+{
+  "default": {
+    "address": {
+      "street1": "48 Middleton Street",
+      "city": "Providence",
+      "stateCode": "AZ",
+      "postalCode": "02909",
+      "countryCode": "US"
+    }
+  }
+}
